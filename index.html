@@ -169,10 +169,6 @@
     <div id="welcome-cover" class="fixed inset-0 z-50 flex items-center justify-center bg-[#1E1C1A]/95 p-4 overflow-y-auto">
         <div class="envelope-container relative w-full max-w-lg bg-[#FAF6F0] p-6 sm:p-8 rounded-2xl shadow-2xl border-4 border-dashed border-cozy-sage/40 transition-all duration-1000 flex flex-col items-center text-center">
             
-            <!-- School Stamp Badge -->
-            <div class="absolute -top-6 bg-cozy-emerald text-white px-4 py-1 rounded-full text-[10px] font-mono uppercase tracking-widest border border-cozy-gold/50 shadow-md">
-                🎓 CLASS OF 2018 // HIGH SCHOOL REUNION 💍
-            </div>
 
             <!-- Bismillah & Header -->
             <div class="font-arabic text-xl text-cozy-clay mt-4 mb-2">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
@@ -212,11 +208,6 @@
     <!-- MAIN SCRAPBOOK NOTEBOOK CONTENT -->
     <div id="main-content" class="hidden h-screen overflow-y-auto relative py-6 sm:py-12 px-2 sm:px-4">
         
-        <!-- MUSIC CONTROLLER -->
-        <button id="music-btn" onclick="toggleMusic()" class="fixed bottom-6 right-6 z-50 w-12 h-12 bg-white hover:bg-cozy-clay text-cozy-dark hover:text-white rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 border-2 border-cozy-sage/20 focus:outline-none">
-            <i id="music-icon" class="fa-solid fa-compact-disc animate-spin text-lg" style="animation-duration: 5s;"></i>
-        </button>
-
         <!-- NOTEBOOK CONTAINER (Responsive Open Binder Design) -->
         <div class="max-w-5xl mx-auto bg-[#FAF6F0] rounded-3xl shadow-2xl border-4 border-stone-200/60 relative overflow-hidden">
             
@@ -344,18 +335,10 @@
                         </div>
 
                         <h3 class="font-serif text-2xl font-bold text-cozy-emerald">Jujun Jamaludin</h3>
-                        <p class="text-cozy-clay font-mono text-xs mb-4">@jujunjamaludin_</p>
-
-                        <!-- Student Data Card -->
-                        <div class="w-full max-w-xs bg-white/75 border border-stone-200 rounded-xl p-3.5 mb-6 text-xs shadow-inner space-y-1">
-                            <div><span class="text-stone-400 font-mono">MBTI:</span> <span class="font-semibold text-cozy-dark">ENFJ-T</span></div>
-                            <div><span class="text-stone-400 font-mono">Kelas SMA:</span> <span class="font-semibold text-cozy-dark">XII MIPA 2 (2016-2018)</span></div>
-                            <div><span class="text-stone-400 font-mono">Hobi:</span> <span class="font-semibold text-cozy-dark">Buku & Sepak Bola</span></div>
-                        </div>
 
                         <p class="text-xs text-stone-500 text-center leading-relaxed max-w-xs">
                             Putra Tercinta dari:<br>
-                            <span class="font-semibold text-stone-700">Bapak Kel. Pria</span> & <span class="font-semibold text-stone-700">Ibu Kel. Pria</span>
+                            <span class="font-semibold text-stone-700">Almarhum Bapak Misno</span> & <span class="font-semibold text-stone-700">Ibu Siti Khodijah</span>
                         </p>
                     </div>
                 </div>
@@ -376,18 +359,10 @@
                         </div>
 
                         <h3 class="font-serif text-2xl font-bold text-cozy-emerald">Silvi Sri Nuraini</h3>
-                        <p class="text-cozy-clay font-mono text-xs mb-4">@silvisrinuraini_</p>
-
-                        <!-- Student Data Card -->
-                        <div class="w-full max-w-xs bg-white/75 border border-stone-200 rounded-xl p-3.5 mb-6 text-xs shadow-inner space-y-1">
-                            <div><span class="text-stone-400 font-mono">MBTI:</span> <span class="font-semibold text-cozy-dark">INFJ-A</span></div>
-                            <div><span class="text-stone-400 font-mono">Kelas SMA:</span> <span class="font-semibold text-cozy-dark">XII MIPA 2 (2016-2018)</span></div>
-                            <div><span class="text-stone-400 font-mono">Hobi:</span> <span class="font-semibold text-cozy-dark">Baking & Kajian Sunnah</span></div>
-                        </div>
 
                         <p class="text-xs text-stone-500 text-center leading-relaxed max-w-xs">
                             Putri Tercinta dari:<br>
-                            <span class="font-semibold text-stone-700">Bapak Kel. Wanita</span> & <span class="font-semibold text-stone-700">Ibu Kel. Wanita</span>
+                            <span class="font-semibold text-stone-700">Bapak Dasman</span> & <span class="font-semibold text-stone-700">Ibu Warsiah</span>
                         </p>
                     </div>
                 </div>
@@ -693,7 +668,7 @@
                     <h3 class="font-serif text-3xl font-bold text-cozy-sand mb-2">Jujun & Silvi</h3>
                     <p class="font-handwritten text-2xl text-cozy-clay mb-6">See you on our special day! 🎒✨</p>
                     
-                    <p class="text-[9px] text-stone-500 font-mono">&copy; 2026 Jujun & Silvi Wedding Invitation. Designed with 3D Notebook Vibe.</p>
+                    <p class="text-[9px] text-stone-500 font-mono">&copy; 2026 Jujun & Silvi Wedding Invitation.</p>
                 </div>
             </footer>
 
@@ -859,9 +834,6 @@
             setTimeout(() => {
                 cover.style.display = 'none';
             }, 1000);
-
-            // Initiate lovely nostalgic synthesizer melody
-            startLoFiMusic();
         }
 
         // Countdown Timer: Dec 5, 2026
@@ -969,123 +941,6 @@
             return str.replace(/[&<>'"]/g, 
                 tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
             );
-        }
-
-        // --- STREAMING_CHUNK:Synthesizing Lo-Fi Cozy Music... ---
-        // Web Audio API: Cozy High School Lofi Melodic Chills
-        let audioCtx = null;
-        let isPlaying = false;
-        let melodyTimer = null;
-
-        function startLoFiMusic() {
-            if (audioCtx) return;
-            
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            audioCtx = new AudioContext();
-            isPlaying = true;
-
-            // F Major (F, A, C, G) -> D Minor (D, F, A, E) -> Bb Major (Bb, D, F, C) -> C Major (C, E, G, D)
-            const chords = [
-                [174.61, 220.00, 261.63, 392.00], // F3, A3, C4, G4 (Fadd9)
-                [146.83, 174.61, 220.00, 329.63], // D3, F3, A3, E4 (Dm9)
-                [116.54, 146.83, 174.61, 261.63], // Bb2, D3, F3, C4 (Bbadd9)
-                [130.81, 164.81, 196.00, 293.66]  // C3, E3, G3, D4 (Cadd9)
-            ];
-
-            let chordIndex = 0;
-
-            function playCozyChord(frequencies) {
-                if (!isPlaying) return;
-                
-                const now = audioCtx.currentTime;
-
-                // Low-pass filter for cozy bedroom lofi keyboard warmth
-                const filter = audioCtx.createBiquadFilter();
-                filter.type = 'lowpass';
-                filter.frequency.setValueAtTime(450, now);
-                filter.frequency.exponentialRampToValueAtTime(180, now + 4.5);
-                filter.Q.value = 1.0;
-                filter.connect(audioCtx.destination);
-
-                frequencies.forEach((freq, idx) => {
-                    const osc = audioCtx.createOscillator();
-                    const gainNode = audioCtx.createGain();
-
-                    osc.type = 'sine'; // Super warm and clean sine tone
-                    
-                    const playDelay = (idx * 0.15) + (Math.random() * 0.05);
-                    osc.frequency.setValueAtTime(freq, now + playDelay);
-
-                    gainNode.gain.setValueAtTime(0, now);
-                    gainNode.gain.linearRampToValueAtTime(0.04, now + playDelay + 0.1);
-                    gainNode.gain.exponentialRampToValueAtTime(0.0001, now + playDelay + 4.0);
-
-                    osc.connect(gainNode);
-                    gainNode.connect(filter);
-
-                    osc.start(now);
-                    osc.stop(now + 4.5);
-                });
-
-                // Soft background vinyl record crackles
-                playVinylCrackle(now);
-            }
-
-            function playVinylCrackle(now) {
-                const bufferSize = audioCtx.sampleRate * 0.5;
-                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-                const data = buffer.getChannelData(0);
-                
-                for (let i = 0; i < bufferSize; i++) {
-                    data[i] = Math.random() * 2 - 1;
-                }
-
-                const noise = audioCtx.createBufferSource();
-                noise.buffer = buffer;
-                noise.loop = true;
-
-                const noiseFilter = audioCtx.createBiquadFilter();
-                noiseFilter.type = 'bandpass';
-                noiseFilter.frequency.setValueAtTime(1000, now);
-                noiseFilter.Q.value = 4.0;
-
-                const noiseGain = audioCtx.createGain();
-                noiseGain.gain.setValueAtTime(0.003, now); // Quiet texture
-
-                noise.connect(noiseFilter);
-                noiseFilter.connect(noiseGain);
-                noiseGain.connect(audioCtx.destination);
-
-                noise.start(now);
-                noise.stop(now + 4.5);
-            }
-
-            playCozyChord(chords[chordIndex]);
-            chordIndex = (chordIndex + 1) % chords.length;
-
-            melodyTimer = setInterval(() => {
-                if (isPlaying) {
-                    playCozyChord(chords[chordIndex]);
-                    chordIndex = (chordIndex + 1) % chords.length;
-                }
-            }, 4500);
-        }
-
-        function toggleMusic() {
-            const icon = document.getElementById('music-icon');
-            if (isPlaying) {
-                isPlaying = false;
-                if (audioCtx) audioCtx.suspend();
-                icon.className = "fa-solid fa-compact-disc text-stone-400 text-lg";
-            } else {
-                isPlaying = true;
-                if (audioCtx) {
-                    audioCtx.resume();
-                } else {
-                    startLoFiMusic();
-                }
-                icon.className = "fa-solid fa-compact-disc animate-spin text-lg";
-            }
         }
     </script>
 </body>
