@@ -192,7 +192,7 @@
             <!-- Personalized Guest Name Badge (Notebook Style) -->
             <div class="w-full max-w-sm bg-white border-2 border-cozy-sage/20 rounded-xl p-4 mb-6 shadow-inner text-left relative overflow-hidden grid-paper">
                 <div class="absolute top-0 left-0 w-2 h-full bg-cozy-clay"></div>
-                <p class="text-[9px] text-stone-400 uppercase tracking-widest font-mono">Kepada Yth. Teman Almamater:</p>
+                <p class="text-[9px] text-stone-400 uppercase tracking-widest font-mono">Kepada Yth.</p>
                 <div class="w-12 h-[1px] bg-cozy-clay/40 my-1"></div>
                 <p id="guest-name" class="font-sans text-base font-bold text-cozy-emerald truncate">Keluarga & Teman Mulia</p>
                 <p class="text-[9px] text-stone-400 mt-1 font-sans italic">*Mohon maaf bila ada kesalahan penulisan nama/gelar</p>
@@ -204,6 +204,17 @@
             </button>
         </div>
     </div>
+
+    <!-- AUDIO PLAYER (Lagu Pernikahan) -->
+    <audio id="wedding-music" loop>
+        <source src="musik.mp3" type="audio/mpeg">
+        Browser Anda tidak mendukung elemen audio.
+    </audio>
+
+    <!-- FLOATING MUSIC BUTTON (Tombol Piringan Hitam) -->
+    <button id="music-btn" onclick="toggleMusic()" class="fixed bottom-6 right-6 z-40 w-12 h-12 bg-cozy-clay text-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 active:scale-95 transition-all duration-300">
+        <i id="music-icon" class="fa-solid fa-compact-disc text-xl"></i>
+    </button>
 
     <!-- MAIN SCRAPBOOK NOTEBOOK CONTENT -->
     <div id="main-content" class="hidden h-screen overflow-y-auto relative py-6 sm:py-12 px-2 sm:px-4">
@@ -335,10 +346,18 @@
                         </div>
 
                         <h3 class="font-serif text-2xl font-bold text-cozy-emerald">Jujun Jamaludin</h3>
+                        <p class="text-cozy-clay font-mono text-xs mb-4">@jujunjamaludin_</p>
+
+                        <!-- Student Data Card -->
+                        <div class="w-full max-w-xs bg-white/75 border border-stone-200 rounded-xl p-3.5 mb-6 text-xs shadow-inner space-y-1">
+                            <div><span class="text-stone-400 font-mono">MBTI:</span> <span class="font-semibold text-cozy-dark">ENFJ-T</span></div>
+                            <div><span class="text-stone-400 font-mono">Kelas SMA:</span> <span class="font-semibold text-cozy-dark">XII MIPA 2 (2016-2018)</span></div>
+                            <div><span class="text-stone-400 font-mono">Hobi:</span> <span class="font-semibold text-cozy-dark">Buku & Sepak Bola</span></div>
+                        </div>
 
                         <p class="text-xs text-stone-500 text-center leading-relaxed max-w-xs">
                             Putra Tercinta dari:<br>
-                            <span class="font-semibold text-stone-700">Almarhum Bapak Misno</span> & <span class="font-semibold text-stone-700">Ibu Siti Khodijah</span>
+                            <span class="font-semibold text-stone-700">Bapak Kel. Pria</span> & <span class="font-semibold text-stone-700">Ibu Kel. Pria</span>
                         </p>
                     </div>
                 </div>
@@ -359,10 +378,18 @@
                         </div>
 
                         <h3 class="font-serif text-2xl font-bold text-cozy-emerald">Silvi Sri Nuraini</h3>
+                        <p class="text-cozy-clay font-mono text-xs mb-4">@silvisrinuraini_</p>
+
+                        <!-- Student Data Card -->
+                        <div class="w-full max-w-xs bg-white/75 border border-stone-200 rounded-xl p-3.5 mb-6 text-xs shadow-inner space-y-1">
+                            <div><span class="text-stone-400 font-mono">MBTI:</span> <span class="font-semibold text-cozy-dark">INFJ-A</span></div>
+                            <div><span class="text-stone-400 font-mono">Kelas SMA:</span> <span class="font-semibold text-cozy-dark">XII MIPA 2 (2016-2018)</span></div>
+                            <div><span class="text-stone-400 font-mono">Hobi:</span> <span class="font-semibold text-cozy-dark">Baking & Kajian Sunnah</span></div>
+                        </div>
 
                         <p class="text-xs text-stone-500 text-center leading-relaxed max-w-xs">
                             Putri Tercinta dari:<br>
-                            <span class="font-semibold text-stone-700">Bapak Dasman</span> & <span class="font-semibold text-stone-700">Ibu Warsiah</span>
+                            <span class="font-semibold text-stone-700">Bapak Kel. Wanita</span> & <span class="font-semibold text-stone-700">Ibu Kel. Wanita</span>
                         </p>
                     </div>
                 </div>
@@ -668,7 +695,7 @@
                     <h3 class="font-serif text-3xl font-bold text-cozy-sand mb-2">Jujun & Silvi</h3>
                     <p class="font-handwritten text-2xl text-cozy-clay mb-6">See you on our special day! 🎒✨</p>
                     
-                    <p class="text-[9px] text-stone-500 font-mono">&copy; 2026 Jujun & Silvi Wedding Invitation.</p>
+                    <p class="text-[9px] text-stone-500 font-mono">&copy; 2026 Jujun & Silvi Wedding Invitation. Designed with 3D Notebook Vibe.</p>
                 </div>
             </footer>
 
@@ -831,9 +858,40 @@
             main.classList.remove('hidden');
             document.body.style.overflow = 'auto'; // allow scrolling
 
+            // Putar musik otomatis setelah tombol diklik
+            playMusic();
+
             setTimeout(() => {
                 cover.style.display = 'none';
             }, 1000);
+        }
+
+        function playMusic() {
+            const music = document.getElementById('wedding-music');
+            const icon = document.getElementById('music-icon');
+            
+            if (music) {
+                music.play().then(() => {
+                    if (icon) icon.classList.add('fa-spin'); 
+                }).catch(err => {
+                    console.log("Autoplay dicegah browser. Klik tombol musik untuk memutar.");
+                });
+            }
+        }
+
+        function toggleMusic() {
+            const music = document.getElementById('wedding-music');
+            const icon = document.getElementById('music-icon');
+            
+            if (music) {
+                if (music.paused) {
+                    music.play();
+                    if (icon) icon.classList.add('fa-spin');
+                } else {
+                    music.pause();
+                    if (icon) icon.classList.remove('fa-spin');
+                }
+            }
         }
 
         // Countdown Timer: Dec 5, 2026
