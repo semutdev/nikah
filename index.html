@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Undangan Pernikahan Jujun & Silvi | High School Halal</title>
+    <title>Undangan Pernikahan Jujun & Silvi | 3D SMA Jurnal Version</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Plus Jakarta Sans (Clean Gen Z), Caveat (Cute Handwriting), Amiri (Arabic) -->
+    <!-- Google Fonts: Plus Jakarta Sans, Caveat (Tangan), Amiri (Arab), Playfair Display -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Caveat:wght@400;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Three.js (Untuk Simulasi 3D Latar Belakang) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
     <script>
         tailwind.config = {
@@ -25,690 +27,845 @@
                     },
                     colors: {
                         cozy: {
-                            sand: '#F6F1EB',        // Warm cozy beige background (ala watercolor paper)
-                            clay: '#D38E70',        // Warm retro terracotta blush
-                            sage: '#8A9A86',        // Soft aesthetic green tea leaf
-                            emerald: '#1F4237',     // Deep Islamic Emerald Green for contrast
-                            gold: '#D4AF37',        // Elegant Gold
-                            dark: '#2C2A29',        // Soft charcoal instead of dark black
-                            board: '#2E3A34'        // High school chalkboard color
+                            sand: '#F5EFEB',        // Kertas gambar bertekstur
+                            clay: '#C87A53',        // Selotip krayon terracotta
+                            sage: '#798E75',        // Hijau mading sekolah
+                            emerald: '#0F2C23',     // Hijau Islami pekat
+                            dark: '#1E1E1E',        // Charcoal pensil 2B
+                            gold: '#D1A153',        // Tinta emas retro
+                            notebookBlue: '#E2ECF7', // Garis buku tulis biru soft
+                            notebookRed: '#F9E2E2'   // Garis pembatas buku merah soft
                         }
                     }
                 }
             }
         }
     </script>
+    
     <style>
-        /* Textured Watercolor & Paper Style */
-        .paper-texture {
-            background-color: #F6F1EB;
-            background-image: radial-gradient(#d3c9be 0.5px, transparent 0.5px), radial-gradient(#d3c9be 0.5px, #F6F1EB 0.5px);
-            background-size: 20px 20px;
-            background-position: 0 0, 10px 10px;
+        /* Tekstur Kertas Bergaris SMA */
+        .lined-paper {
+            background-color: #FAF6F0;
+            background-image: linear-gradient(rgba(226, 236, 247, 0.8) 1px, transparent 1px);
+            background-size: 100% 24px;
+            line-height: 24px;
+            position: relative;
         }
         
+        .lined-paper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 40px;
+            width: 2px;
+            height: 100%;
+            background-color: rgba(249, 226, 242, 0.9);
+            border-left: 1px solid rgba(249, 226, 242, 0.5);
+        }
+
+        /* Tekstur Kertas Kotak-Kotak (Grid Paper) Matematika SMA */
+        .grid-paper {
+            background-color: #FAF6F0;
+            background-image: 
+                linear-gradient(rgba(121, 142, 117, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(121, 142, 117, 0.08) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* Robekan Kertas Realistis */
+        .torn-paper {
+            filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.08));
+            clip-path: polygon(
+                0% 0%, 100% 0%, 100% 98%, 
+                97% 95%, 94% 98%, 91% 94%, 88% 97%, 85% 94%, 82% 98%, 79% 95%, 76% 97%, 73% 94%, 
+                70% 98%, 67% 95%, 64% 97%, 61% 94%, 58% 98%, 55% 95%, 52% 97%, 49% 94%, 46% 98%, 
+                43% 95%, 40% 97%, 37% 94%, 34% 98%, 31% 95%, 28% 97%, 25% 94%, 22% 98%, 19% 95%, 
+                16% 97%, 13% 94%, 10% 98%, 7% 95%, 4% 98%, 0% 94%
+            );
+        }
+
+        /* Ring Spiral Binder Logam 3D */
+        .binder-ring {
+            background: linear-gradient(180deg, #d1d5db 0%, #ffffff 25%, #9ca3af 50%, #4b5563 80%, #1f2937 100%);
+            box-shadow: 2px 4px 6px rgba(0,0,0,0.25), inset 0 1px 2px rgba(255,255,255,0.8);
+            border-radius: 9999px;
+            width: 14px;
+            height: 48px;
+            position: relative;
+            z-index: 30;
+        }
+
+        .binder-hole {
+            background: #111827;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        /* Efek 3D Card Hover */
+        .card-3d {
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .card-3d:hover {
+            transform: translateY(-8px) rotateY(4deg) rotateX(2deg);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        /* 3D Envelope Animation */
+        .envelope-container {
+            perspective: 1200px;
+        }
+
+        .envelope-flap {
+            transform-origin: top;
+            transition: transform 0.8s ease-in-out;
+            z-index: 20;
+        }
+
+        .envelope-open .envelope-flap {
+            transform: rotateX(180deg);
+        }
+
+        /* Background Canvas Z-Index */
+        #canvas3d {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: all;
+        }
+
         .washi-tape {
-            background: rgba(211, 142, 112, 0.6);
+            background: rgba(200, 122, 83, 0.8);
             backdrop-filter: blur(1px);
             transform: rotate(-3deg);
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-left: 2px dashed rgba(255,255,255,0.4);
+            border-right: 2px dashed rgba(255,255,255,0.4);
         }
 
         .washi-tape-green {
-            background: rgba(138, 154, 134, 0.6);
+            background: rgba(121, 142, 117, 0.8);
             backdrop-filter: blur(1px);
             transform: rotate(4deg);
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .polaroid-frame {
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-            border-bottom-width: 24px;
-        }
-
-        /* Cute floating animation */
-        @keyframes gentle-float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-6px) rotate(1deg); }
-        }
-        .gentle-float {
-            animation: gentle-float 6s ease-in-out infinite;
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% { transform: scale(1); opacity: 0.9; }
-            50% { transform: scale(1.05); opacity: 1; }
-        }
-        .pulse-button {
-            animation: pulse-glow 2s infinite;
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #F6F1EB;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #8A9A86;
-            border-radius: 4px;
+            border-left: 2px dashed rgba(255,255,255,0.4);
+            border-right: 2px dashed rgba(255,255,255,0.4);
         }
     </style>
 </head>
-<body class="font-sans text-cozy-dark paper-texture overflow-hidden selection:bg-cozy-clay selection:text-white">
+<body class="font-sans text-cozy-dark bg-cozy-sand overflow-hidden selection:bg-cozy-clay selection:text-white">
 
-    <!-- WELCOME COVER (Tirai Pembuka Bertema Estetika Gen Z & Stasiun Pertemuan) -->
-    <div id="welcome-cover" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-cozy-dark text-cozy-sand transition-all duration-1000 ease-in-out px-4 text-center overflow-hidden">
-        
-        <!-- Warm Cozy Ambient Glow -->
-        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cozy-clay/20 rounded-full filter blur-[100px] pointer-events-none"></div>
-        <div class="absolute bottom-10 left-10 w-48 h-48 bg-cozy-sage/10 rounded-full filter blur-[80px] pointer-events-none"></div>
+    <!-- 3D INTERACTIVE BACKGROUND CANVAS -->
+    <canvas id="canvas3d"></canvas>
 
-        <!-- High School Aesthetic Grid lines overlay -->
-        <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px); background-size: 40px 40px;"></div>
-
-        <!-- Inner Cute Border Frame -->
-        <div class="absolute inset-4 md:inset-8 border border-cozy-sand/10 rounded-3xl pointer-events-none flex flex-col justify-between p-6">
-            <div class="flex justify-between text-[10px] tracking-widest text-cozy-sand/50 font-mono">
-                <span>CLASS OF 2018 // REUNION FOR LIFE</span>
-                <span>DESEMBER 2026</span>
-            </div>
-            <div class="flex justify-between text-[10px] tracking-widest text-cozy-sand/50 font-mono">
-                <span>WALIMATUL 'URSY</span>
-                <span>JUJUN & SILVI</span>
-            </div>
-        </div>
-
-        <!-- Welcome Content Card -->
-        <div class="relative z-10 max-w-lg mx-auto flex flex-col items-center px-4">
+    <!-- WELCOME COVER (3D Fold-Out Envelope & High School Theme) -->
+    <div id="welcome-cover" class="fixed inset-0 z-50 flex items-center justify-center bg-[#1E1C1A]/95 p-4 overflow-y-auto">
+        <div class="envelope-container relative w-full max-w-lg bg-[#FAF6F0] p-6 sm:p-8 rounded-2xl shadow-2xl border-4 border-dashed border-cozy-sage/40 transition-all duration-1000 flex flex-col items-center text-center">
             
-            <!-- Small Islamic Bismillah Badge -->
-            <div class="font-arabic text-xl text-cozy-clay mb-3 tracking-wide opacity-90">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
-            <div class="inline-flex items-center gap-2 px-3 py-1 bg-cozy-sand/10 rounded-full border border-cozy-sand/20 text-xs text-cozy-clay font-semibold tracking-wider uppercase mb-6">
-                🎒 High School Secret Admirer To Halal 💍
+            <!-- School Stamp Badge -->
+            <div class="absolute -top-6 bg-cozy-emerald text-white px-4 py-1 rounded-full text-[10px] font-mono uppercase tracking-widest border border-cozy-gold/50 shadow-md">
+                🎓 CLASS OF 2018 // HIGH SCHOOL REUNION 💍
             </div>
 
-            <!-- Watercolor-style Polaroid Illustration of meeting -->
-            <div class="relative bg-white text-cozy-dark p-3 pb-6 rounded-lg rotate-[-2deg] shadow-2xl max-w-[240px] mb-8 group transition duration-500 hover:rotate-[1deg]">
-                <!-- Washi Tape -->
-                <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-24 h-6 washi-tape text-[10px] text-white font-handwritten flex items-center justify-center select-none">Reuni Kelas April 2024</div>
-                <!-- Drawing styled image -->
-                <div class="w-full h-44 rounded bg-stone-100 overflow-hidden relative">
-                    <img src="watermarked_img_9091036554872741594.png" alt="Pertemuan Reuni Jujun Silvi" class="w-full h-full object-cover transition duration-500 group-hover:scale-105" onerror="this.src='https://placehold.co/300x300/F6F1EB/D38E70?text=Jujun+Silvi'">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-                    <span class="absolute bottom-2 left-2 text-[10px] text-white font-mono">📍 Takdir Reuni Kelas</span>
+            <!-- Bismillah & Header -->
+            <div class="font-arabic text-xl text-cozy-clay mt-4 mb-2">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+            <p class="text-xs font-mono text-stone-400 tracking-wider uppercase">Surat Undangan Walimatul 'Ursy</p>
+
+            <!-- 3D-like Polaroid Frame -->
+            <div class="relative bg-white text-cozy-dark p-3 pb-6 rounded-lg rotate-[-1.5deg] shadow-xl max-w-[200px] sm:max-w-[240px] my-6 border border-stone-200 hover:rotate-[1deg] transition-transform duration-500">
+                <!-- Decorative Tape -->
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-6 washi-tape text-[10px] text-white font-handwritten flex items-center justify-center select-none">April 2024 ✨</div>
+                <div class="w-full aspect-square rounded bg-stone-100 overflow-hidden relative">
+                    <img src="watermarked_img_9091036554872741594.png" alt="Reuni Kelas Berdua" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/300x300/FAF6F0/798E75?text=Jujun+Silvi'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                    <span class="absolute bottom-1 left-2 text-[8px] text-white font-mono">📍 Reuni Kelas Kecil</span>
                 </div>
-                <p class="font-handwritten text-xl text-cozy-dark mt-3">Rencana indah-Nya... ✨</p>
+                <p class="font-handwritten text-xl text-cozy-clay mt-3">Rencana Terindah-Nya...</p>
             </div>
 
-            <h1 class="font-serif text-4xl md:text-5xl text-cozy-sand mb-2 tracking-wide font-bold">Jujun & Silvi</h1>
-            <p class="font-handwritten text-2xl text-cozy-clay mb-6">Satu Almamater, Satu Masa Depan Mulia</p>
+            <h1 class="font-serif text-3xl sm:text-4xl font-bold text-cozy-emerald mb-1">Jujun & Silvi</h1>
+            <p class="font-handwritten text-xl text-cozy-clay mb-6">"Dari Teman Sekelas SMA Menjadi Pasangan Halal"</p>
 
-            <!-- Personalized Guest Section -->
-            <div class="bg-white/5 border border-white/10 rounded-2xl p-5 mb-8 w-full max-w-sm backdrop-blur-md relative overflow-hidden">
+            <!-- Personalized Guest Name Badge (Notebook Style) -->
+            <div class="w-full max-w-sm bg-white border-2 border-cozy-sage/20 rounded-xl p-4 mb-6 shadow-inner text-left relative overflow-hidden grid-paper">
                 <div class="absolute top-0 left-0 w-2 h-full bg-cozy-clay"></div>
-                <p class="text-[11px] text-cozy-sand/60 mb-2 uppercase tracking-widest">Special Invitation For You:</p>
-                <div class="w-8 h-[1px] bg-cozy-clay/40 mb-3"></div>
-                <p id="guest-name" class="font-sans text-base md:text-lg text-white font-semibold tracking-wide">Teman Sekelas & Sahabat Terbaik</p>
+                <p class="text-[9px] text-stone-400 uppercase tracking-widest font-mono">Kepada Yth. Teman Almamater:</p>
+                <div class="w-12 h-[1px] bg-cozy-clay/40 my-1"></div>
+                <p id="guest-name" class="font-sans text-base font-bold text-cozy-emerald truncate">Keluarga & Teman Mulia</p>
+                <p class="text-[9px] text-stone-400 mt-1 font-sans italic">*Mohon maaf bila ada kesalahan penulisan nama/gelar</p>
             </div>
 
             <!-- Open Button -->
-            <button onclick="openInvitation()" class="pulse-button px-8 py-3.5 bg-gradient-to-r from-cozy-clay to-cozy-clay/90 hover:from-cozy-clay hover:to-cozy-sage text-white font-bold rounded-full shadow-lg transition duration-300 transform hover:scale-105 active:scale-95 flex items-center gap-3">
-                <i class="fa-solid fa-envelope-open-text animate-bounce"></i> Buka Surat Undangan
+            <button onclick="openInvitation()" class="px-8 py-3.5 bg-gradient-to-r from-cozy-clay to-cozy-clay/90 text-white font-bold rounded-full shadow-lg transform hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-3">
+                <i class="fa-solid fa-envelope-open-text animate-bounce"></i> Buka Lembar Undangan
             </button>
         </div>
     </div>
 
-    <!-- MAIN CONTENT -->
-    <div id="main-content" class="hidden h-screen overflow-y-auto relative">
+    <!-- MAIN SCRAPBOOK NOTEBOOK CONTENT -->
+    <div id="main-content" class="hidden h-screen overflow-y-auto relative py-6 sm:py-12 px-2 sm:px-4">
         
-        <!-- FLOATING COZY MUSIC CONTROLLER -->
-        <button id="music-btn" onclick="toggleMusic()" class="fixed bottom-6 right-6 z-40 w-12 h-12 bg-white hover:bg-cozy-clay text-cozy-dark hover:text-white rounded-full shadow-2xl flex items-center justify-center transition duration-300 focus:outline-none border-2 border-cozy-sage/20">
-            <i id="music-icon" class="fa-solid fa-compact-disc animate-spin" style="animation-duration: 4s;"></i>
+        <!-- MUSIC CONTROLLER -->
+        <button id="music-btn" onclick="toggleMusic()" class="fixed bottom-6 right-6 z-50 w-12 h-12 bg-white hover:bg-cozy-clay text-cozy-dark hover:text-white rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 border-2 border-cozy-sage/20 focus:outline-none">
+            <i id="music-icon" class="fa-solid fa-compact-disc animate-spin text-lg" style="animation-duration: 5s;"></i>
         </button>
 
-        <!-- HEADER HERO SECTION -->
-        <header class="relative min-h-screen flex items-center justify-center text-center px-4 overflow-hidden py-12">
-            <!-- Watercolor blobs backdrop in HTML structure -->
-            <div class="absolute top-1/4 left-1/4 w-80 h-80 bg-cozy-sage/20 rounded-full filter blur-[120px] pointer-events-none"></div>
-            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cozy-clay/20 rounded-full filter blur-[120px] pointer-events-none"></div>
+        <!-- NOTEBOOK CONTAINER (Responsive Open Binder Design) -->
+        <div class="max-w-5xl mx-auto bg-[#FAF6F0] rounded-3xl shadow-2xl border-4 border-stone-200/60 relative overflow-hidden">
             
-            <div class="relative z-10 max-w-3xl" data-aos="fade-up">
-                <!-- Small Stamp -->
-                <div class="flex justify-center items-center gap-2 mb-6">
-                    <span class="w-8 h-[1px] bg-cozy-clay"></span>
-                    <span class="font-handwritten text-xl text-cozy-clay">The Wedding Invitation</span>
-                    <span class="w-8 h-[1px] bg-cozy-clay"></span>
-                </div>
-
-                <div class="font-arabic text-2xl text-cozy-emerald mb-6 tracking-wide">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+            <!-- SECTION 1: HERO / BANNER UTAMA (Left/Right Layout on Desktop) -->
+            <div class="relative grid grid-cols-1 md:grid-cols-2 gap-0 border-b-2 border-stone-200/50">
                 
-                <h1 class="font-serif text-5xl md:text-7xl font-bold text-cozy-emerald mb-4 tracking-wide">
-                    Jujun & Silvi
-                </h1>
-                
-                <p class="font-handwritten text-3xl text-cozy-clay mb-8">"Teman sebangku yang ditakdirkan bersama selamanya..."</p>
-                
-                <!-- School Notebook style Date Tag -->
-                <div class="inline-block bg-white border-2 border-dashed border-cozy-sage/50 rounded-2xl px-8 py-4 shadow-md relative rotate-[-1deg]">
-                    <div class="absolute -top-3 left-4 w-8 h-6 washi-tape text-[10px] text-white flex items-center justify-center">SAVE!</div>
-                    <p class="font-mono text-xs uppercase tracking-[0.25em] text-stone-400 mb-1">Hari Kelulusan Jomblo</p>
-                    <p class="font-serif text-xl md:text-2xl font-bold text-cozy-emerald">Sabtu, 05 Desember 2026</p>
-                    <div class="w-full h-[1px] bg-stone-100 my-2"></div>
-                    <p class="text-[11px] font-semibold text-cozy-clay tracking-wider uppercase">Walimatul 'Ursy Pernikahan</p>
-                </div>
-            </div>
-
-            <!-- Scroll indicator styled as school desk carving -->
-            <div class="absolute bottom-8 left-1/2 -translate-x-1/2 text-cozy-clay text-[10px] tracking-widest uppercase flex flex-col items-center gap-1 font-mono">
-                <span>Geser Kebawah</span>
-                <i class="fa-solid fa-chevron-down animate-bounce text-sm"></i>
-            </div>
-        </header>
-
-        <!-- QURAN VERSE SECTION -->
-        <section class="py-16 px-4 bg-white/60 border-y border-cozy-sage/10 text-center relative overflow-hidden">
-            <div class="max-w-3xl mx-auto relative z-10">
-                <!-- Cute Stamp Top -->
-                <div class="w-12 h-12 bg-cozy-sage/10 text-cozy-sage rounded-full flex items-center justify-center mx-auto mb-6">
-                    <i class="fa-solid fa-star-and-crescent text-lg"></i>
+                <!-- Spiral Binder Rings decoration (Localized for Section 1 to prevent overlapping full-width text) -->
+                <div class="absolute inset-y-0 left-1/2 -translate-x-1/2 z-30 hidden md:flex flex-col justify-around py-6 pointer-events-none">
+                    <div class="flex items-center gap-2">
+                        <div class="binder-hole"></div>
+                        <div class="binder-ring"></div>
+                        <div class="binder-hole"></div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="binder-hole"></div>
+                        <div class="binder-ring"></div>
+                        <div class="binder-hole"></div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="binder-hole"></div>
+                        <div class="binder-ring"></div>
+                        <div class="binder-hole"></div>
+                    </div>
                 </div>
 
-                <!-- Arabic text -->
-                <p class="font-arabic text-2xl md:text-3xl text-cozy-emerald leading-relaxed mb-6 px-4" style="line-height: 2;">
-                    وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ Lَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً ۗاِنَّ فِيْ ذٰلِكَ لَاٰيٰtٍ لِّقَوْمٍ يَّتَفَكَّرُوْنَ
-                </p>
+                <!-- Left Page: Lined Book Style Cover -->
+                <div class="lined-paper p-8 sm:p-12 flex flex-col justify-between min-h-[400px] md:min-h-[550px] border-r-0 md:border-r border-stone-200/40">
+                    <div class="pl-8 relative z-10">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="w-8 h-2 bg-cozy-clay/60 rounded"></span>
+                            <span class="font-handwritten text-2xl text-cozy-clay">The Wedding of</span>
+                        </div>
+                        <div class="font-arabic text-2xl text-cozy-emerald mb-6">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+                        <h1 class="font-serif text-5xl sm:text-6xl font-bold text-cozy-emerald tracking-wide mb-2 leading-none">
+                            Jujun <br>& Silvi
+                        </h1>
+                        <p class="font-handwritten text-3xl text-cozy-clay mt-4">"Satu Almamater, Satu Tujuan Mulia"</p>
+                    </div>
 
-                <!-- Translation -->
-                <p class="text-xs md:text-sm text-stone-600 leading-relaxed max-w-2xl mx-auto italic mb-4 font-sans">
-                    "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sungguh, pada yang demikian itu benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang berpikir."
-                </p>
-                <p class="text-xs font-bold text-cozy-clay font-mono tracking-widest">( QS. Ar-Rum: 21 )</p>
-            </div>
-        </section>
-
-        <!-- HIGH SCHOOL LOVE STORY SECTION (Aesthetic Retro Polaroid & Watercolor Vibe) -->
-        <section class="py-20 px-4 md:px-8 bg-cozy-sand relative overflow-hidden">
-            <!-- Watercolor Background Blotches -->
-            <div class="absolute top-1/2 left-0 w-80 h-80 bg-cozy-clay/10 rounded-full filter blur-[100px] pointer-events-none"></div>
-
-            <div class="max-w-5xl mx-auto">
-                <div class="text-center mb-16">
-                    <p class="text-cozy-clay font-handwritten text-2xl mb-1">Our Journey of Faith</p>
-                    <h2 class="font-serif text-3xl md:text-4xl font-bold text-cozy-emerald tracking-wide">Kisah Dua Hati yang Menjaga</h2>
-                    <div class="w-12 h-1 bg-cozy-clay/30 mx-auto mt-3 rounded"></div>
+                    <!-- Small Note Card taped at bottom -->
+                    <div class="pl-8 relative z-10 mt-8">
+                        <div class="inline-block bg-white border border-cozy-sage/30 rounded-xl p-4 shadow-sm rotate-[-1deg] max-w-xs">
+                            <div class="absolute -top-3 left-4 w-16 h-5 washi-tape text-[9px] text-white flex items-center justify-center">SAVE!</div>
+                            <p class="font-mono text-[9px] tracking-wider text-stone-400 uppercase">Hari Kelulusan Jomblo</p>
+                            <p class="font-serif text-base font-bold text-cozy-emerald">Sabtu, 05 Desember 2026</p>
+                            <div class="w-full h-[1px] bg-stone-100 my-1"></div>
+                            <p class="text-[9px] font-semibold text-cozy-clay uppercase tracking-widest">Walimatul 'Ursy Pernikahan</p>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="grid md:grid-cols-12 gap-12 items-center">
+                <!-- Right Page: Grid Paper Cover with Hand-Drawn Vibe -->
+                <div class="grid-paper p-8 sm:p-12 flex flex-col items-center justify-center min-h-[400px] md:min-h-[550px] relative">
+                    <div class="absolute top-4 right-4 bg-cozy-clay/10 text-cozy-clay text-[9px] font-mono px-3 py-1 rounded-full border border-cozy-clay/30">
+                        SMA BINAAN // REUNI 2024
+                    </div>
                     
-                    <!-- Left Side: Interactive Scrapbook Photo Frame -->
-                    <div class="md:col-span-5 flex flex-col items-center">
-                        <div class="relative bg-white text-cozy-dark p-4 pb-8 rounded-lg rotate-[-2deg] shadow-2xl w-full max-w-[320px] group transition duration-500 hover:rotate-[2deg]">
-                            <!-- Green Washi Tape top -->
-                            <div class="absolute -top-4 left-1/3 w-32 h-7 washi-tape-green text-xs text-white font-handwritten flex items-center justify-center select-none">
-                                Rasa yang Terpendam 🎒
-                            </div>
-                            
-                            <!-- Stasiun Malang Illustration (as provided) -->
-                            <div class="w-full aspect-[3/4] rounded bg-stone-100 overflow-hidden relative">
-                                <img src="watermarked_img_9091036554872741594.png" alt="Reuni Kelas Berdua" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x500/F6F1EB/8A9A86?text=Pertemuan+Reuni'">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-                                <span class="absolute bottom-3 left-3 text-xs text-white font-mono flex items-center gap-1">
-                                    <i class="fa-solid fa-heart text-cozy-clay"></i> Reuni Kelas 2024
-                                </span>
-                            </div>
-                            <p class="font-handwritten text-2xl text-cozy-dark mt-4 text-center">Nyaman Seperti "Pulang" ✨</p>
-                            <p class="text-[10px] text-center text-stone-400 font-mono">Dipertemukan Kembali atas Izin Allah</p>
+                    <!-- Beautiful 3D Frame Doodle -->
+                    <div class="card-3d bg-white p-3 pb-8 rounded-xl shadow-xl border border-stone-200/80 rotate-[2deg] max-w-[260px] relative">
+                        <div class="absolute -top-3 left-1/3 w-20 h-5 washi-tape text-[8px] text-white flex items-center justify-center">Destiny's Plan</div>
+                        <div class="w-full aspect-[4/5] rounded overflow-hidden">
+                            <img src="watermarked_img_9091036554872741594.png" alt="Reuni Berdua" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x500/FAF6F0/C87A53?text=Jujun+&+Silvi'">
                         </div>
+                        <p class="font-handwritten text-2xl text-cozy-dark mt-3 text-center">Nyaman Seperti "Pulang" 🏡</p>
+                        <p class="text-[9px] text-stone-400 text-center font-mono uppercase mt-1">Reuni Berdua • April 2024</p>
                     </div>
-
-                    <!-- Right Side: Gen Z Storytelling Timeline (High School Diary style) -->
-                    <div class="md:col-span-7 space-y-8">
-                        <div class="bg-white p-6 rounded-3xl border border-cozy-sage/20 shadow-sm relative overflow-hidden">
-                            <!-- Blue diary line background style -->
-                            <div class="absolute inset-x-0 top-0 h-2 bg-cozy-clay"></div>
-                            
-                            <h3 class="font-serif text-xl font-bold text-cozy-emerald mb-3 flex items-center gap-2">
-                                <span>🏫</span> Satu Kelas, Namun Berjarak (2016 - 2018)
-                            </h3>
-                            <p class="text-xs md:text-sm text-stone-600 leading-relaxed font-sans mb-4">
-                                Walau kami pernah sekelas di kelas 11 dan 12 SMA pada tahun 2016 hingga 2018, kami tidak dekat. Kami bahkan tidak pernah berada dalam satu kelompok belajar dan sangat jarang bertegur sapa. Jujun menyimpan rasa suka dalam diam sejak masa sekolah itu, menjaga perasaan tersebut rapat-rapat dalam doa.
-                            </p>
-                            <span class="inline-block px-3 py-1 bg-cozy-sage/10 text-cozy-sage font-mono text-[10px] font-semibold rounded-full">
-                                Masa Sekolah • Putih Abu-Abu
-                            </span>
-                        </div>
-
-                        <div class="bg-white p-6 rounded-3xl border border-cozy-sage/20 shadow-sm relative overflow-hidden">
-                            <div class="absolute inset-x-0 top-0 h-2 bg-cozy-sage"></div>
-                            
-                            <h3 class="font-serif text-xl font-bold text-cozy-emerald mb-3 flex items-center gap-2">
-                                <span>☕</span> Reuni yang Hanya Dihadiri Berdua (April 2024)
-                            </h3>
-                            <p class="text-xs md:text-sm text-stone-600 leading-relaxed font-sans mb-4">
-                                Takdir Allah menyatukan kami lewat rencana reuni kelas yang sederhana. Dari sekian banyak teman sekelas, luar biasanya hanya Jujun (yang ditemani keponakannya) dan Silvi (yang diantar bapaknya) yang hadir. Di sanalah kami mulai mengobrol panjang lebar. Ajaibnya, obrolan itu terasa begitu nyaman, seakan kami baru pulang dari sebuah perjalanan yang sangat panjang.
-                            </p>
-                            <span class="inline-block px-3 py-1 bg-cozy-clay/10 text-cozy-clay font-mono text-[10px] font-semibold rounded-full">
-                                April 2024 • Awal Obrolan Nyaman
-                            </span>
-                        </div>
-
-                        <div class="bg-white p-6 rounded-3xl border border-cozy-emerald/20 shadow-sm relative overflow-hidden">
-                            <div class="absolute inset-x-0 top-0 h-2 bg-cozy-emerald"></div>
-                            
-                            <h3 class="font-serif text-xl font-bold text-cozy-emerald mb-3 flex items-center gap-2">
-                                <span>💌</span> Jeda Jarak Depok-Cilacap & Komitmen Menunggu
-                            </h3>
-                            <p class="text-xs md:text-sm text-stone-600 leading-relaxed font-sans mb-4">
-                                Hubungan kami mulai dekat dalam jarak: Jujun di Depok dan Silvi di Cilacap. Teguh memegang prinsip tidak ingin berpacaran, ditambah belum siap menikah di tahun 2024, Jujun sengaja membatasi komunikasi demi saling menjaga kesucian diri. Jujun menitipkan pesan, <em>"Tunggulah aku. Namun jika ada laki-laki lain mendahului dan kamu menyukainya, terimalah. Tapi jika hatimu masih untukku, maka tunggu."</em> Dan dengan setia, Silvi menanti.
-                            </p>
-                            <span class="inline-block px-3 py-1 bg-cozy-emerald/10 text-cozy-emerald font-mono text-[10px] font-semibold rounded-full">
-                                2024 - 2025 • Masa Saling Menjaga
-                            </span>
-                        </div>
-
-                        <div class="bg-white p-6 rounded-3xl border border-cozy-emerald/20 shadow-sm relative overflow-hidden">
-                            <div class="absolute inset-x-0 top-0 h-2 bg-cozy-emerald bg-gradient-to-r from-cozy-clay to-cozy-emerald"></div>
-                            
-                            <h3 class="font-serif text-xl font-bold text-cozy-emerald mb-3 flex items-center gap-2">
-                                <span>💍</span> Khitbah Syar'i & Berkah Guru Ngaji (Maret 2026)
-                            </h3>
-                            <p class="text-xs md:text-sm text-stone-600 leading-relaxed font-sans mb-4">
-                                Penantian panjang itu bermuara pada kepastian mulia. Pada bulan Maret 2026, Jujun membuktikan keseriusannya. Didampingi oleh keluarga tercinta serta Guru Ngaji, Jujun pergi melamar (khitbah) Silvi secara resmi di Cilacap. Lamaran suci tersebut disambut dengan penuh kebahagiaan dan kelegaan dari kedua belah pihak.
-                            </p>
-                            <span class="inline-block px-3 py-1 bg-cozy-emerald/15 text-cozy-emerald font-mono text-[10px] font-semibold rounded-full">
-                                Maret 2026 • Lamaran Resmi (Khitbah)
-                            </span>
-                        </div>
-                    </div>
-
                 </div>
             </div>
-        </section>
 
-        <!-- PROFILE SECTION (Mempelai) -->
-        <section id="mempelai" class="py-20 px-4 md:px-8 bg-white/40 border-t border-cozy-sage/10 relative">
-            <div class="max-w-6xl mx-auto">
-                <div class="text-center mb-16">
-                    <p class="text-cozy-clay font-handwritten text-2xl mb-1">Mempelai Mulia</p>
-                    <h2 class="font-serif text-3xl md:text-4xl font-bold text-cozy-emerald">Assalamu'alaikum Wr. Wb.</h2>
-                    <p class="text-stone-500 max-w-xl mx-auto text-xs md:text-sm leading-relaxed mt-2">
-                        Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan syukuran pernikahan suci kami:
+            <!-- SECTION 2: AL-QURAN VERSE (High School Blackboard / Bulletin Board Style) -->
+            <div class="bg-cozy-emerald text-cozy-sand py-12 px-6 sm:px-12 text-center border-b-2 border-stone-200/50 relative">
+                <!-- Chalk Doodles overlay using SVG -->
+                <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 16px 16px;"></div>
+                <div class="max-w-3xl mx-auto">
+                    <div class="w-10 h-10 bg-white/10 text-cozy-clay rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa-solid fa-star-and-crescent text-lg"></i>
+                    </div>
+                    <!-- Arabic Text (Fixed typos where english letters 'm' were placed inside the words) -->
+                    <p class="font-arabic text-2xl sm:text-3xl text-cozy-sand leading-loose mb-6 px-2" style="line-height: 2.3;">
+                        وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً ۗاِنَّ فِيْ ذٰلِكَ لَاٰيٰتٍ لِّقَوْمٍ يَّتَفَكَّرُوْنَ
                     </p>
-                </div>
-
-                <!-- Profile Cards Grid -->
-                <div class="grid md:grid-cols-2 gap-12 lg:gap-20 items-stretch">
-                    
-                    <!-- Mempelai Pria (Jujun) -->
-                    <div class="bg-white rounded-3xl border border-cozy-sage/20 p-6 md:p-8 shadow-md flex flex-col justify-between items-center text-center relative overflow-hidden">
-                        <!-- Student ID Badge Aesthetic element -->
-                        <div class="absolute top-3 right-3 bg-cozy-clay/10 text-cozy-clay text-[9px] font-mono px-2 py-1 rounded">
-                            ID: GROOM_2026
-                        </div>
-                        
-                        <div class="flex flex-col items-center">
-                            <!-- Polaroid Frame Photo -->
-                            <div class="relative bg-stone-50 p-3 pb-6 rounded shadow-lg rotate-[-1.5deg] w-48 mb-6 border border-stone-200">
-                                <div class="w-full aspect-square rounded overflow-hidden">
-                                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400" alt="Jujun Jamaludin" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x400/F6F1EB/8A9A86?text=Jujun'">
-                                </div>
-                                <span class="font-handwritten text-lg text-cozy-dark mt-2 block">Jujun J.</span>
-                            </div>
-
-                            <h3 class="font-serif text-2xl font-bold text-cozy-emerald mb-1">Jujun Jamaludin</h3>
-                            <p class="text-cozy-clay font-mono text-xs font-semibold mb-4">@jujunjamaludin_</p>
-                            
-                            <!-- Gen Z Profile details -->
-                            <div class="grid grid-cols-2 gap-2 w-full max-w-xs text-left bg-cozy-sand/50 p-3 rounded-2xl mb-6 border border-cozy-sage/10 text-xs">
-                                <div><span class="text-stone-400 font-mono">MBTI:</span> <span class="font-semibold">ENFJ-T</span></div>
-                                <div><span class="text-stone-400 font-mono">Kelas SMA:</span> <span class="font-semibold">XII MIPA 2</span></div>
-                                <div class="col-span-2 mt-1"><span class="text-stone-400 font-mono">Hobi:</span> <span class="font-semibold">Buku & Sepak Bola</span></div>
-                            </div>
-
-                            <div class="w-8 h-[1px] bg-cozy-clay/40 mb-3"></div>
-                            <p class="text-xs text-stone-500 max-w-xs leading-relaxed">
-                                Putra Tercinta dari:<br>
-                                <span class="font-semibold text-stone-700">Bapak Kel. Pria</span> & <span class="font-semibold text-stone-700">Ibu Kel. Pria</span>
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Mempelai Wanita (Silvi) -->
-                    <div class="bg-white rounded-3xl border border-cozy-sage/20 p-6 md:p-8 shadow-md flex flex-col justify-between items-center text-center relative overflow-hidden">
-                        <!-- Student ID Badge Aesthetic element -->
-                        <div class="absolute top-3 right-3 bg-cozy-sage/10 text-cozy-sage text-[9px] font-mono px-2 py-1 rounded">
-                            ID: BRIDE_2026
-                        </div>
-
-                        <div class="flex flex-col items-center">
-                            <!-- Polaroid Frame Photo -->
-                            <div class="relative bg-stone-50 p-3 pb-6 rounded shadow-lg rotate-[1.5deg] w-48 mb-6 border border-stone-200">
-                                <div class="w-full aspect-square rounded overflow-hidden">
-                                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400" alt="Silvi Sri Nuraini" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x400/F6F1EB/8A9A86?text=Silvi'">
-                                </div>
-                                <span class="font-handwritten text-lg text-cozy-dark mt-2 block">Silvi S.</span>
-                            </div>
-
-                            <h3 class="font-serif text-2xl font-bold text-cozy-emerald mb-1">Silvi Sri Nuraini</h3>
-                            <p class="text-cozy-clay font-mono text-xs font-semibold mb-4">@silvisrinuraini_</p>
-                            
-                            <!-- Gen Z Profile details -->
-                            <div class="grid grid-cols-2 gap-2 w-full max-w-xs text-left bg-cozy-sand/50 p-3 rounded-2xl mb-6 border border-cozy-sage/10 text-xs">
-                                <div><span class="text-stone-400 font-mono">MBTI:</span> <span class="font-semibold">INFJ-A</span></div>
-                                <div><span class="text-stone-400 font-mono">Kelas SMA:</span> <span class="font-semibold">XII MIPA 2</span></div>
-                                <div class="col-span-2 mt-1"><span class="text-stone-400 font-mono">Hobi:</span> <span class="font-semibold">Baking & Kajian Sunnah</span></div>
-                            </div>
-
-                            <div class="w-8 h-[1px] bg-cozy-clay/40 mb-3"></div>
-                            <p class="text-xs text-stone-500 max-w-xs leading-relaxed">
-                                Putri Tercinta dari:<br>
-                                <span class="font-semibold text-stone-700">Bapak Kel. Wanita</span> & <span class="font-semibold text-stone-700">Ibu Kel. Wanita</span>
-                            </p>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Sunnah Marriage Doa Text Block -->
-                <div class="mt-16 bg-white border border-cozy-sage/20 rounded-3xl p-6 max-w-2xl mx-auto text-center shadow-sm relative overflow-hidden">
-                    <div class="absolute inset-0 opacity-[0.02]" style="background-image: radial-gradient(circle, #D38E70 1px, transparent 1px); background-size: 16px 16px;"></div>
-                    <div class="font-arabic text-xl text-cozy-emerald mb-2">بَارَكَ اللهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ</div>
-                    <p class="text-xs text-stone-500 italic font-sans">"Semoga Allah memberkahimu di waktu bahagia dan memberkahimu di waktu susah, dan semoga Dia menyatukan kalian berdua dalam kebaikan." <br>(HR. Abu Dawud)</p>
+                    <!-- Translation -->
+                    <p class="text-xs sm:text-sm text-stone-300 leading-relaxed max-w-2xl mx-auto italic mb-4 font-sans px-2">
+                        "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sungguh, pada yang demikian itu benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang berpikir."
+                    </p>
+                    <p class="text-[10px] font-bold text-cozy-clay font-mono tracking-widest">( QS. Ar-Rum: 21 )</p>
                 </div>
             </div>
-        </section>
 
-        <!-- COUNTDOWN TIMER SECTION -->
-        <section class="py-16 bg-cozy-emerald text-cozy-sand relative overflow-hidden">
-            <!-- Watercolor grid paper mesh overlay -->
-            <div class="absolute inset-0 opacity-[0.05]" style="background-image: linear-gradient(white 1px, transparent 1px), linear-gradient(to right, white 1px, transparent 1px); background-size: 20px 20px;"></div>
-            
-            <div class="relative z-10 max-w-4xl mx-auto px-4 text-center">
-                <i class="fa-solid fa-graduation-cap text-cozy-clay text-2xl mb-4"></i>
-                <h3 class="font-serif text-2xl md:text-3xl text-cozy-clay mb-6 tracking-wide font-bold">Menghitung Hari Pengesahan Ikatan Ibadah</h3>
+            <!-- SECTION 3: PROFIL MEMPELAI (Interactive Notebook Binder Layout) -->
+            <div class="relative grid grid-cols-1 md:grid-cols-2 gap-0 border-b-2 border-stone-200/50">
                 
-                <div class="grid grid-cols-4 gap-3 md:gap-6 max-w-xl mx-auto mb-8">
-                    <!-- Days -->
-                    <div class="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-sm shadow-xl">
-                        <span id="days" class="block font-mono text-3xl md:text-5xl font-bold text-cozy-clay">00</span>
-                        <div class="w-6 h-[1px] bg-cozy-clay/30 mx-auto my-1"></div>
-                        <span class="text-[9px] md:text-[10px] uppercase tracking-widest text-stone-300">Hari</span>
+                <!-- Spiral Binder Rings decoration (Localized for Section 3 to prevent overlapping full-width text) -->
+                <div class="absolute inset-y-0 left-1/2 -translate-x-1/2 z-30 hidden md:flex flex-col justify-around py-6 pointer-events-none">
+                    <div class="flex items-center gap-2">
+                        <div class="binder-hole"></div>
+                        <div class="binder-ring"></div>
+                        <div class="binder-hole"></div>
                     </div>
-                    <!-- Hours -->
-                    <div class="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-sm shadow-xl">
-                        <span id="hours" class="block font-mono text-3xl md:text-5xl font-bold text-cozy-clay">00</span>
-                        <div class="w-6 h-[1px] bg-cozy-clay/30 mx-auto my-1"></div>
-                        <span class="text-[9px] md:text-[10px] uppercase tracking-widest text-stone-300">Jam</span>
+                    <div class="flex items-center gap-2">
+                        <div class="binder-hole"></div>
+                        <div class="binder-ring"></div>
+                        <div class="binder-hole"></div>
                     </div>
-                    <!-- Minutes -->
-                    <div class="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-sm shadow-xl">
-                        <span id="minutes" class="block font-mono text-3xl md:text-5xl font-bold text-cozy-clay">00</span>
-                        <div class="w-6 h-[1px] bg-cozy-clay/30 mx-auto my-1"></div>
-                        <span class="text-[9px] md:text-[10px] uppercase tracking-widest text-stone-300">Menit</span>
-                    </div>
-                    <!-- Seconds -->
-                    <div class="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-sm shadow-xl">
-                        <span id="seconds" class="block font-mono text-3xl md:text-5xl font-bold text-cozy-clay">00</span>
-                        <div class="w-6 h-[1px] bg-cozy-clay/30 mx-auto my-1"></div>
-                        <span class="text-[9px] md:text-[10px] uppercase tracking-widest text-stone-300">Detik</span>
+                    <div class="flex items-center gap-2">
+                        <div class="binder-hole"></div>
+                        <div class="binder-ring"></div>
+                        <div class="binder-hole"></div>
                     </div>
                 </div>
 
-                <p class="text-xs md:text-sm text-stone-300 tracking-wide max-w-md mx-auto italic">
-                    "Semoga Allah memberkahi persatuan kedua hati yang dipertemukan sejak bangku kelas hingga pelaminan halal."
-                </p>
+                <!-- Mempelai Pria (Jujun) - Lined Paper Page -->
+                <div class="lined-paper p-8 sm:p-12 border-r-0 md:border-r border-stone-200/40">
+                    <div class="pl-8 flex flex-col items-center">
+                        <div class="inline-block px-3 py-1 bg-cozy-clay/15 text-cozy-clay border border-cozy-clay/30 font-mono text-[9px] uppercase tracking-wider rounded-md mb-6">
+                            🎒 MEMPELAI PRIA
+                        </div>
+
+                        <!-- Polaroid 3D hover frame -->
+                        <div class="card-3d relative bg-white text-cozy-dark p-3 pb-6 rounded-lg rotate-[-1.5deg] shadow-lg w-full max-w-[220px] mb-6 border border-stone-200">
+                            <div class="w-full aspect-square rounded overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400" alt="Jujun Jamaludin" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x400/FAF6F0/798E75?text=Jujun'">
+                            </div>
+                            <span class="font-handwritten text-xl text-cozy-dark mt-2 block text-center">Jujun Jamaludin</span>
+                        </div>
+
+                        <h3 class="font-serif text-2xl font-bold text-cozy-emerald">Jujun Jamaludin</h3>
+                        <p class="text-cozy-clay font-mono text-xs mb-4">@jujunjamaludin_</p>
+
+                        <!-- Student Data Card -->
+                        <div class="w-full max-w-xs bg-white/75 border border-stone-200 rounded-xl p-3.5 mb-6 text-xs shadow-inner space-y-1">
+                            <div><span class="text-stone-400 font-mono">MBTI:</span> <span class="font-semibold text-cozy-dark">ENFJ-T</span></div>
+                            <div><span class="text-stone-400 font-mono">Kelas SMA:</span> <span class="font-semibold text-cozy-dark">XII MIPA 2 (2016-2018)</span></div>
+                            <div><span class="text-stone-400 font-mono">Hobi:</span> <span class="font-semibold text-cozy-dark">Buku & Sepak Bola</span></div>
+                        </div>
+
+                        <p class="text-xs text-stone-500 text-center leading-relaxed max-w-xs">
+                            Putra Tercinta dari:<br>
+                            <span class="font-semibold text-stone-700">Bapak Kel. Pria</span> & <span class="font-semibold text-stone-700">Ibu Kel. Pria</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Mempelai Wanita (Silvi) - Grid Paper Page -->
+                <div class="grid-paper p-8 sm:p-12">
+                    <div class="flex flex-col items-center">
+                        <div class="inline-block px-3 py-1 bg-cozy-sage/15 text-cozy-sage border border-cozy-sage/30 font-mono text-[9px] uppercase tracking-wider rounded-md mb-6">
+                            🌸 MEMPELAI WANITA
+                        </div>
+
+                        <!-- Polaroid 3D hover frame -->
+                        <div class="card-3d relative bg-white text-cozy-dark p-3 pb-6 rounded-lg rotate-[1.5deg] shadow-lg w-full max-w-[220px] mb-6 border border-stone-200">
+                            <div class="w-full aspect-square rounded overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400" alt="Silvi Sri Nuraini" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x400/FAF6F0/798E75?text=Silvi'">
+                            </div>
+                            <span class="font-handwritten text-xl text-cozy-dark mt-2 block text-center">Silvi Sri N.</span>
+                        </div>
+
+                        <h3 class="font-serif text-2xl font-bold text-cozy-emerald">Silvi Sri Nuraini</h3>
+                        <p class="text-cozy-clay font-mono text-xs mb-4">@silvisrinuraini_</p>
+
+                        <!-- Student Data Card -->
+                        <div class="w-full max-w-xs bg-white/75 border border-stone-200 rounded-xl p-3.5 mb-6 text-xs shadow-inner space-y-1">
+                            <div><span class="text-stone-400 font-mono">MBTI:</span> <span class="font-semibold text-cozy-dark">INFJ-A</span></div>
+                            <div><span class="text-stone-400 font-mono">Kelas SMA:</span> <span class="font-semibold text-cozy-dark">XII MIPA 2 (2016-2018)</span></div>
+                            <div><span class="text-stone-400 font-mono">Hobi:</span> <span class="font-semibold text-cozy-dark">Baking & Kajian Sunnah</span></div>
+                        </div>
+
+                        <p class="text-xs text-stone-500 text-center leading-relaxed max-w-xs">
+                            Putri Tercinta dari:<br>
+                            <span class="font-semibold text-stone-700">Bapak Kel. Wanita</span> & <span class="font-semibold text-stone-700">Ibu Kel. Wanita</span>
+                        </p>
+                    </div>
+                </div>
             </div>
-        </section>
 
-        <!-- DETAIL ACARA SECTION -->
-        <section id="acara" class="py-20 px-4 md:px-8 bg-cozy-sand relative">
-            <div class="max-w-5xl mx-auto">
-                <div class="text-center mb-16">
-                    <p class="text-cozy-clay font-handwritten text-2xl mb-1">Rangkaian Hari Bahagia</p>
-                    <h2 class="font-serif text-3xl md:text-4xl font-bold text-cozy-emerald">Waktu & Lokasi Acara</h2>
-                    <p class="text-stone-500 max-w-md mx-auto text-xs md:text-sm mt-1">Kami mengharapkan kehadiran rekan-rekan dan guru-guru tercinta:</p>
+            <!-- SECTION 4: KISAH CINTA (High School Diary Scrapbook style) -->
+            <div class="p-8 sm:p-12 border-b-2 border-stone-200/50 bg-[#FAF6F0] relative overflow-hidden">
+                <div class="text-center mb-10">
+                    <p class="text-cozy-clay font-handwritten text-2xl mb-1">Our High School Journey</p>
+                    <h2 class="font-serif text-3xl font-bold text-cozy-emerald tracking-wide">Kisah Dua Hati yang Menjaga</h2>
+                    <div class="w-12 h-1 bg-cozy-clay/40 mx-auto mt-2 rounded"></div>
                 </div>
 
-                <div class="grid md:grid-cols-2 gap-8 items-stretch">
-                    <!-- Akad Nikah Card -->
-                    <div class="bg-white border border-cozy-sage/20 rounded-3xl p-8 shadow-md flex flex-col justify-between hover:shadow-xl transition duration-300 relative overflow-hidden">
-                        <div class="absolute -right-8 -top-8 w-24 h-24 bg-cozy-clay/5 rounded-full"></div>
+                <!-- Custom Scrapbook Diary Layout -->
+                <div class="max-w-4xl mx-auto space-y-8 relative">
+                    
+                    <!-- Diary Page 1 -->
+                    <div class="bg-white border-2 border-stone-100 rounded-2xl p-6 shadow-md relative overflow-hidden grid-paper card-3d">
+                        <div class="absolute top-0 right-0 w-24 h-6 washi-tape text-[10px] text-white flex items-center justify-center">2016 - 2018</div>
+                        <h3 class="font-serif text-lg font-bold text-cozy-emerald mb-2 flex items-center gap-2">
+                            <span>🏫</span> Satu Kelas, Namun Berjarak (SMA)
+                        </h3>
+                        <p class="text-xs text-stone-600 leading-relaxed">
+                            Walau kami pernah satu kelas di kelas 11 dan 12 SMA pada tahun 2016 hingga 2018, kami tidak dekat. Kami bahkan tidak pernah berada dalam satu kelompok belajar dan sangat jarang bertegur sapa. Jujun menyimpan rasa kagum dalam diam sejak masa sekolah itu, menjaga perasaan tersebut rapat-rapat dalam doa yang sunyi.
+                        </p>
+                    </div>
+
+                    <!-- Diary Page 2 -->
+                    <div class="bg-white border-2 border-stone-100 rounded-2xl p-6 shadow-md relative overflow-hidden lined-paper card-3d">
+                        <div class="absolute top-0 right-0 w-24 h-6 washi-tape-green text-[10px] text-white flex items-center justify-center">April 2024</div>
+                        <h3 class="font-serif text-lg font-bold text-cozy-emerald mb-2 flex items-center gap-2 pl-8">
+                            <span>☕</span> Reuni Kelas Berdua Saja (Satu Meja)
+                        </h3>
+                        <p class="text-xs text-stone-600 leading-relaxed pl-8">
+                            Takdir Allah menyatukan kami lewat rencana reuni kelas kecil yang sederhana. Ajaibnya, dari seluruh rekan kelas, hanya Jujun (yang ditemani keponakannya) dan Silvi (yang diantar bapaknya) yang hadir. Di momen itu, kami mulai mengobrol panjang lebar. Rasa canggung seketika sirna berganti kenyamanan luar biasa, seolah kami baru pulang bersama dari sebuah perjalanan panjang yang sangat jauh.
+                        </p>
+                    </div>
+
+                    <!-- Diary Page 3 -->
+                    <div class="bg-white border-2 border-stone-100 rounded-2xl p-6 shadow-md relative overflow-hidden grid-paper card-3d">
+                        <div class="absolute top-0 right-0 w-28 h-6 washi-tape text-[10px] text-white flex items-center justify-center">LDR Menjaga Diri</div>
+                        <h3 class="font-serif text-lg font-bold text-cozy-emerald mb-2 flex items-center gap-2">
+                            <span>🕊️</span> Jeda Jarak Depok-Cilacap & Komitmen Menunggu
+                        </h3>
+                        <p class="text-xs text-stone-600 leading-relaxed">
+                            Hubungan kami mulai dekat jarak jauh: Jujun di Depok dan Silvi di Cilacap. Teguh memegang prinsip tidak ingin berpacaran demi menjaga kesucian diri, ditambah Jujun belum siap melangkah ke pernikahan di 2024, Jujun memilih sengaja membatasi komunikasi. Jujun menitipkan pesan tulus, <em>"Tunggulah aku. Namun jika ada laki-laki lain mendahului dan kamu menyukainya, silakan terima. Tapi jika hatimu masih untukku, maka tunggu."</em> Dan dengan setia, Silvi memilih menanti.
+                        </p>
+                    </div>
+
+                    <!-- Diary Page 4 -->
+                    <div class="bg-white border-2 border-stone-100 rounded-2xl p-6 shadow-md relative overflow-hidden lined-paper card-3d">
+                        <div class="absolute top-0 right-0 w-24 h-6 washi-tape-green text-[10px] text-white flex items-center justify-center">Maret 2026</div>
+                        <h3 class="font-serif text-lg font-bold text-cozy-emerald mb-2 flex items-center gap-2 pl-8">
+                            <span>💍</span> Khitbah Syar'i & Berkah Guru Ngaji
+                        </h3>
+                        <p class="text-xs text-stone-600 leading-relaxed pl-8">
+                            Ujian kesabaran berbuah manis. Pada bulan Maret 2026, Jujun membuktikan keseriusannya. Didampingi oleh keluarga besar serta Guru Ngaji, Jujun pergi secara resmi menkhitbah Silvi di kediamannya di Cilacap. Lamaran suci yang dinantikan tersebut disambut dengan penuh kebahagiaan dan kelegaan dari kedua belah pihak.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 5: COUNTDOWN TIMER (Classroom Chalkboard Style) -->
+            <div class="bg-cozy-emerald text-cozy-sand py-12 px-4 text-center border-b-2 border-stone-200/50 relative">
+                <div class="max-w-4xl mx-auto relative z-10">
+                    <i class="fa-solid fa-graduation-cap text-cozy-clay text-2xl mb-4"></i>
+                    <h3 class="font-serif text-2xl sm:text-3xl text-cozy-sand mb-6 tracking-wide font-bold">Menghitung Hari Pengesahan Ikatan Ibadah</h3>
+                    
+                    <!-- Countdown Display Grid -->
+                    <div class="grid grid-cols-4 gap-3 sm:gap-4 max-w-sm sm:max-w-lg mx-auto mb-6">
+                        <!-- Days -->
+                        <div class="bg-white/5 border border-white/10 rounded-2xl p-3 sm:p-4 backdrop-blur-sm">
+                            <span id="days" class="block font-mono text-2xl sm:text-4xl font-bold text-cozy-clay">00</span>
+                            <div class="w-6 h-[1px] bg-cozy-clay/30 mx-auto my-1"></div>
+                            <span class="text-[8px] sm:text-[10px] uppercase tracking-widest text-stone-300">Hari</span>
+                        </div>
+                        <!-- Hours -->
+                        <div class="bg-white/5 border border-white/10 rounded-2xl p-3 sm:p-4 backdrop-blur-sm">
+                            <span id="hours" class="block font-mono text-2xl sm:text-4xl font-bold text-cozy-clay">00</span>
+                            <div class="w-6 h-[1px] bg-cozy-clay/30 mx-auto my-1"></div>
+                            <span class="text-[8px] sm:text-[10px] uppercase tracking-widest text-stone-300">Jam</span>
+                        </div>
+                        <!-- Minutes -->
+                        <div class="bg-white/5 border border-white/10 rounded-2xl p-3 sm:p-4 backdrop-blur-sm">
+                            <span id="minutes" class="block font-mono text-2xl sm:text-4xl font-bold text-cozy-clay">00</span>
+                            <div class="w-6 h-[1px] bg-cozy-clay/30 mx-auto my-1"></div>
+                            <span class="text-[8px] sm:text-[10px] uppercase tracking-widest text-stone-300">Menit</span>
+                        </div>
+                        <!-- Seconds -->
+                        <div class="bg-white/5 border border-white/10 rounded-2xl p-3 sm:p-4 backdrop-blur-sm">
+                            <span id="seconds" class="block font-mono text-2xl sm:text-4xl font-bold text-cozy-clay">00</span>
+                            <div class="w-6 h-[1px] bg-cozy-clay/30 mx-auto my-1"></div>
+                            <span class="text-[8px] sm:text-[10px] uppercase tracking-widest text-stone-300">Detik</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 6: DETAIL ACARA (Symmetric Lined/Grid Layout) -->
+            <div id="acara" class="relative grid grid-cols-1 md:grid-cols-2 gap-0 border-b-2 border-stone-200/50">
+                
+                <!-- Spiral Binder Rings decoration (Localized for Section 6 to prevent overlapping full-width text) -->
+                <div class="absolute inset-y-0 left-1/2 -translate-x-1/2 z-30 hidden md:flex flex-col justify-around py-6 pointer-events-none">
+                    <div class="flex items-center gap-2">
+                        <div class="binder-hole"></div>
+                        <div class="binder-ring"></div>
+                        <div class="binder-hole"></div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="binder-hole"></div>
+                        <div class="binder-ring"></div>
+                        <div class="binder-hole"></div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="binder-hole"></div>
+                        <div class="binder-ring"></div>
+                        <div class="binder-hole"></div>
+                    </div>
+                </div>
+
+                <!-- Left Page: Akad Nikah (Lined paper) -->
+                <div class="lined-paper p-8 sm:p-12 border-r-0 md:border-r border-stone-200/40">
+                    <div class="pl-8 flex flex-col justify-between h-full">
                         <div>
-                            <!-- Icon -->
-                            <div class="w-14 h-14 bg-cozy-clay/10 text-cozy-clay rounded-2xl flex items-center justify-center text-2xl mb-6">
+                            <!-- School Icon badge -->
+                            <div class="w-14 h-14 bg-cozy-clay/10 text-cozy-clay rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-sm border border-cozy-clay/20">
                                 <i class="fa-solid fa-kaaba"></i>
                             </div>
-                            <h3 class="font-serif text-2xl font-bold text-cozy-emerald mb-2">Akad Nikah</h3>
-                            <p class="text-xs text-cozy-clay font-mono font-semibold mb-4 tracking-wider uppercase">Prosesi Ijab Qabul</p>
-                            <div class="space-y-4 text-stone-600 text-xs md:text-sm mb-6">
+                            <h3 class="font-serif text-3xl font-bold text-cozy-emerald mb-1">Akad Nikah</h3>
+                            <p class="text-[10px] text-cozy-clay font-mono font-bold tracking-widest uppercase mb-4">PROSESI IJAB QABUL</p>
+                            
+                            <div class="space-y-3 text-stone-600 text-xs sm:text-sm mb-8">
                                 <p class="flex items-center gap-3">
-                                    <i class="fa-regular fa-calendar-check text-cozy-sage w-5 text-center text-sm"></i>
+                                    <i class="fa-regular fa-calendar-check text-cozy-sage w-5"></i>
                                     Sabtu, 05 Desember 2026
                                 </p>
                                 <p class="flex items-center gap-3">
-                                    <i class="fa-regular fa-clock text-cozy-sage w-5 text-center text-sm"></i>
+                                    <i class="fa-regular fa-clock text-cozy-sage w-5"></i>
                                     08:00 - 10:00 WIB
                                 </p>
                                 <p class="flex items-start gap-3">
-                                    <i class="fa-solid fa-location-dot text-cozy-sage w-5 text-center mt-0.5 text-sm"></i>
-                                    <span>Kediaman Mempelai Wanita<br><span class="text-[11px] text-stone-400">Jl. Mawar Indah No. 45, Bandung</span></span>
+                                    <i class="fa-solid fa-location-dot text-cozy-sage w-5 mt-0.5"></i>
+                                    <span>Kediaman Mempelai Wanita<br><span class="text-[10px] text-stone-400">Jl. Mawar Indah No. 45, Bandung</span></span>
                                 </p>
                             </div>
                         </div>
+
                         <a href="https://calendar.google.com" target="_blank" class="w-full py-3 bg-cozy-emerald hover:bg-cozy-dark text-white font-semibold text-center rounded-xl transition duration-300 text-xs flex items-center justify-center gap-2 shadow-md">
-                            <i class="fa-regular fa-calendar-plus"></i> Tambah Ke Kalender
+                            <i class="fa-regular fa-calendar-plus"></i> Masukkan ke Kalender
                         </a>
                     </div>
+                </div>
 
-                    <!-- Walimatul 'Ursy Card -->
-                    <div class="bg-white border border-cozy-sage/20 rounded-3xl p-8 shadow-md flex flex-col justify-between hover:shadow-xl transition duration-300 relative overflow-hidden">
-                        <div class="absolute -right-8 -top-8 w-24 h-24 bg-cozy-sage/5 rounded-full"></div>
+                <!-- Right Page: Walimatul 'Ursy (Grid Paper) -->
+                <div class="grid-paper p-8 sm:p-12">
+                    <div class="flex flex-col justify-between h-full">
                         <div>
-                            <!-- Icon -->
-                            <div class="w-14 h-14 bg-cozy-sage/10 text-cozy-sage rounded-2xl flex items-center justify-center text-2xl mb-6">
+                            <!-- School Icon badge -->
+                            <div class="w-14 h-14 bg-cozy-sage/10 text-cozy-sage rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-sm border border-cozy-sage/20">
                                 <i class="fa-solid fa-mosque"></i>
                             </div>
-                            <h3 class="font-serif text-2xl font-bold text-cozy-emerald mb-2">Walimatul 'Ursy</h3>
-                            <p class="text-xs text-cozy-clay font-mono font-semibold mb-4 tracking-wider uppercase">Resepsi Pernikahan</p>
-                            <div class="space-y-4 text-stone-600 text-xs md:text-sm mb-6">
+                            <h3 class="font-serif text-3xl font-bold text-cozy-emerald mb-1">Walimatul 'Ursy</h3>
+                            <p class="text-[10px] text-cozy-clay font-mono font-bold tracking-widest uppercase mb-4">RESEPSI PERNIKAHAN</p>
+                            
+                            <div class="space-y-3 text-stone-600 text-xs sm:text-sm mb-8">
                                 <p class="flex items-center gap-3">
-                                    <i class="fa-regular fa-calendar-check text-cozy-sage w-5 text-center text-sm"></i>
+                                    <i class="fa-regular fa-calendar-check text-cozy-sage w-5"></i>
                                     Sabtu, 05 Desember 2026
                                 </p>
                                 <p class="flex items-center gap-3">
-                                    <i class="fa-regular fa-clock text-cozy-sage w-5 text-center text-sm"></i>
+                                    <i class="fa-regular fa-clock text-cozy-sage w-5"></i>
                                     11:00 WIB - Selesai
                                 </p>
                                 <p class="flex items-start gap-3">
-                                    <i class="fa-solid fa-location-dot text-cozy-sage w-5 text-center mt-0.5 text-sm"></i>
-                                    <span>Gedung Serbaguna Utama<br><span class="text-[11px] text-stone-400">Jl. Jend. Sudirman Kav 12, Bandung</span></span>
+                                    <i class="fa-solid fa-location-dot text-cozy-sage w-5 mt-0.5"></i>
+                                    <span>Gedung Serbaguna Utama<br><span class="text-[10px] text-stone-400">Jl. Jend. Sudirman Kav 12, Bandung</span></span>
                                 </p>
                             </div>
                         </div>
+
                         <a href="https://maps.google.com" target="_blank" class="w-full py-3 bg-cozy-clay hover:bg-cozy-dark text-white font-semibold text-center rounded-xl transition duration-300 text-xs flex items-center justify-center gap-2 shadow-md">
                             <i class="fa-solid fa-map-location-dot"></i> Petunjuk Google Maps
                         </a>
                     </div>
                 </div>
-
-                <!-- Simulated Map -->
-                <div class="mt-12 bg-white p-4 border border-cozy-sage/20 rounded-3xl shadow-sm">
-                    <div class="w-full h-64 bg-stone-50 rounded-2xl relative overflow-hidden flex flex-col items-center justify-center text-center p-4">
-                        <i class="fa-solid fa-map-pin text-4xl text-cozy-clay mb-3 animate-pulse"></i>
-                        <h4 class="font-serif font-bold text-cozy-emerald text-base mb-1">Peta Lokasi Walimatul 'Ursy</h4>
-                        <p class="text-xs text-stone-400 max-w-sm mb-4">Peta interaktif lokasi gedung pertemuan silaturahmi pernikahan kami.</p>
-                        <a href="https://maps.google.com" target="_blank" class="px-5 py-2.5 bg-cozy-emerald text-white hover:bg-cozy-dark text-xs font-semibold rounded-full transition duration-300 flex items-center gap-2">
-                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Hubungkan Ke Maps Asli
-                        </a>
-                    </div>
-                </div>
             </div>
-        </section>
 
-        <!-- RSVP & GUEST WISHES SECTION -->
-        <section id="rsvp" class="py-20 px-4 md:px-8 bg-white/40 border-t border-cozy-sage/10 relative">
-            <div class="max-w-5xl mx-auto">
-                <div class="text-center mb-16">
-                    <p class="text-cozy-clay font-handwritten text-2xl mb-1">E-Noticeboard</p>
-                    <h2 class="font-serif text-3xl md:text-4xl font-bold text-cozy-emerald">Konfirmasi Kehadiran & Doa</h2>
-                    <p class="text-stone-500 max-w-md mx-auto text-xs md:text-sm mt-1">Goreskan tinta doa restu Anda layaknya pesan mading kelulusan sekolah:</p>
-                </div>
-
-                <div class="grid md:grid-cols-5 gap-12 items-start">
-                    
-                    <!-- Form Card (Styled like a school notebook page) -->
-                    <div class="md:col-span-2 bg-white border border-cozy-sage/20 p-6 rounded-3xl shadow-md relative">
-                        <div class="absolute top-0 left-0 w-full h-2 bg-cozy-clay"></div>
-                        <h3 class="font-serif font-bold text-lg text-cozy-emerald mb-6 flex items-center gap-2">
-                            <i class="fa-solid fa-pen-nib text-cozy-clay"></i> Isi Buku Tamu
-                        </h3>
-                        <form id="rsvp-form" onsubmit="submitRSVP(event)" class="space-y-4">
-                            <div>
-                                <label class="block text-[10px] font-mono font-bold text-stone-400 mb-1 uppercase">Nama Anda</label>
-                                <input type="text" id="rsvp-name" required class="w-full px-4 py-2.5 bg-cozy-sand/40 border border-stone-200 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-cozy-clay focus:border-cozy-clay" placeholder="Contoh: Ahmad Fauzi (X IPA 1)">
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-mono font-bold text-stone-400 mb-1 uppercase">Konfirmasi Kehadiran</label>
-                                <select id="rsvp-status" class="w-full px-4 py-2.5 bg-cozy-sand/40 border border-stone-200 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-cozy-clay focus:border-cozy-clay">
-                                    <option value="Hadir">Insya Allah Hadir</option>
-                                    <option value="Tidak Hadir">Maaf, Berhalangan Hadir</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-mono font-bold text-stone-400 mb-1 uppercase">Pesan / Doa Restu</label>
-                                <textarea id="rsvp-message" required rows="4" class="w-full px-4 py-2.5 bg-cozy-sand/40 border border-stone-200 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-cozy-clay focus:border-cozy-clay" placeholder="Tuliskan bait doa barakallah..."></textarea>
-                            </div>
-                            <button type="submit" class="w-full py-3 bg-cozy-emerald hover:bg-cozy-dark text-white font-bold rounded-xl transition duration-300 text-xs shadow-md">
-                                Kirim Restu & Konfirmasi Kehadiran
-                            </button>
-                        </form>
+            <!-- SECTION 7: GUEST BOOK & RSVP (School Bulletin Board style) -->
+            <div id="rsvp" class="p-8 sm:p-12 bg-white/70 border-b-2 border-stone-200/50 relative overflow-hidden">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-10">
+                        <p class="text-cozy-clay font-handwritten text-2xl mb-1">Mading Digital</p>
+                        <h2 class="font-serif text-3xl font-bold text-cozy-emerald">Konfirmasi Kehadiran & Doa</h2>
+                        <p class="text-stone-500 max-w-md mx-auto text-xs mt-2 px-2">Sematkan bait doa restu tulus Anda seperti mengisi pesan di papan mading sekolah:</p>
                     </div>
 
-                    <!-- Wishes Display (Aesthetic mading style paper slips) -->
-                    <div class="md:col-span-3 space-y-4">
-                        <div class="flex items-center justify-between border-b border-stone-200 pb-2 mb-4">
-                            <h3 class="font-serif font-bold text-lg text-cozy-emerald flex items-center gap-2">
-                                <i class="fa-solid fa-comments text-cozy-clay"></i> Pesan Teman & Kerabat
-                            </h3>
-                            <span id="total-wishes-count" class="font-mono text-[10px] text-stone-400">0 untaian doa</span>
-                        </div>
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-8 items-start">
                         
-                        <!-- Scrollable Board -->
-                        <div id="wishes-container" class="space-y-4 max-h-[420px] overflow-y-auto pr-2">
-                            <!-- Wishes dynamic cards go here -->
+                        <!-- RSVP Form (Torn Diary Paper Style) -->
+                        <div class="md:col-span-2 bg-[#FAF6F0] border-2 border-stone-200 rounded-2xl p-6 shadow-md relative overflow-hidden grid-paper card-3d">
+                            <div class="absolute top-0 left-0 w-full h-1.5 bg-cozy-clay"></div>
+                            <h3 class="font-serif font-bold text-lg text-cozy-emerald mb-4 flex items-center gap-2">
+                                <i class="fa-solid fa-pen-clip text-cozy-clay"></i> Isi Buku Tamu
+                            </h3>
+                            <form id="rsvp-form" onsubmit="submitRSVP(event)" class="space-y-4">
+                                <div>
+                                    <label class="block text-[10px] font-mono font-bold text-stone-400 mb-1 uppercase">Nama Lengkap</label>
+                                    <input type="text" id="rsvp-name" required class="w-full px-4 py-2.5 bg-white border border-stone-200 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-cozy-clay focus:border-cozy-clay" placeholder="Contoh: Ahmad (XII IPA 1)">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-mono font-bold text-stone-400 mb-1 uppercase">Konfirmasi Kehadiran</label>
+                                    <select id="rsvp-status" class="w-full px-4 py-2.5 bg-white border border-stone-200 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-cozy-clay focus:border-cozy-clay">
+                                        <option value="Hadir">Insya Allah Hadir</option>
+                                        <option value="Tidak Hadir">Maaf, Berhalangan</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-mono font-bold text-stone-400 mb-1 uppercase">Bait Ucapan & Doa</label>
+                                    <textarea id="rsvp-message" required rows="4" class="w-full px-4 py-2.5 bg-white border border-stone-200 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-cozy-clay focus:border-cozy-clay" placeholder="Barakallahu laka wa baaraka 'alaika..."></textarea>
+                                </div>
+                                <button type="submit" class="w-full py-3 bg-cozy-emerald hover:bg-cozy-dark text-white font-bold rounded-xl transition duration-300 text-xs shadow-md">
+                                    Kirim Doa Restu & Konfirmasi
+                                </button>
+                            </form>
                         </div>
-                    </div>
 
+                        <!-- Sticky Note Wishes Display -->
+                        <div class="md:col-span-3 space-y-4">
+                            <div class="flex items-center justify-between border-b border-stone-200 pb-2 mb-4">
+                                <h3 class="font-serif font-bold text-lg text-cozy-emerald flex items-center gap-2">
+                                    <i class="fa-solid fa-note-sticky text-cozy-clay"></i> Catatan Doa Teman
+                                </h3>
+                                <span id="total-wishes-count" class="font-mono text-[10px] text-stone-400">0 untaian doa</span>
+                            </div>
+                            
+                            <div id="wishes-container" class="space-y-4 max-h-[380px] overflow-y-auto pr-1">
+                                <!-- Dynamically loaded sticky notes -->
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
-        </section>
 
-        <!-- WEDDING GIFT / KADO DIGITAL -->
-        <section id="gift" class="py-20 px-4 md:px-8 bg-cozy-sand border-t border-cozy-sage/10 text-center">
-            <div class="max-w-4xl mx-auto">
-                <div class="text-center mb-12">
-                    <p class="text-cozy-clay font-handwritten text-2xl mb-1">Berbagi Berkat</p>
-                    <h2 class="font-serif text-3xl md:text-4xl font-bold text-cozy-emerald">Kado Pernikahan Digital</h2>
-                    <p class="text-stone-500 max-w-md mx-auto text-xs md:text-sm mt-1">Jika Anda berkeinginan mengirimkan hadiah pernikahan berupa kado digital, berikut saluran shadaqah & kado:</p>
-                </div>
+            <!-- SECTION 8: DIGITAL GIFT (Cute Notebook pockets) -->
+            <div id="gift" class="p-8 sm:p-12 bg-[#FAF6F0] text-center border-b-2 border-stone-200/50">
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <p class="text-cozy-clay font-handwritten text-2xl mb-1">Berbagi Berkah</p>
+                        <h2 class="font-serif text-3xl font-bold text-cozy-emerald">Kado Pernikahan Digital</h2>
+                        <p class="text-stone-500 max-w-md mx-auto text-xs mt-2 px-2">Bagi rekan sekalian yang berkeinginan mengirimkan hadiah atau shadaqah syukuran secara digital:</p>
+                    </div>
 
-                <div class="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto">
-                    <!-- Groom Account (BCA) -->
-                    <div class="bg-white border border-cozy-sage/20 rounded-3xl p-6 shadow-sm flex flex-col justify-between items-center relative overflow-hidden">
-                        <div class="absolute -right-6 -bottom-6 w-16 h-16 bg-cozy-clay/5 rounded-full"></div>
-                        <div class="text-left w-full">
-                            <p class="text-[9px] font-mono text-stone-400 uppercase tracking-widest font-bold mb-1">Rekening Mempelai Pria</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+                        <!-- Groom BCA Account -->
+                        <div class="card-3d bg-white border border-stone-200 rounded-3xl p-6 shadow-sm relative overflow-hidden text-left">
+                            <p class="text-[9px] font-mono text-stone-400 uppercase font-bold mb-1">Rekening Mempelai Pria</p>
                             <span class="px-3 py-1 bg-cozy-sand text-cozy-clay border border-cozy-clay/20 font-mono font-bold rounded-full text-[10px]">BANK BCA</span>
                             
                             <div class="my-6">
                                 <p class="text-stone-400 text-[10px] mb-1">Nomor Rekening</p>
-                                <p id="rekening-bca" class="font-mono text-lg md:text-xl font-bold text-cozy-emerald tracking-widest">1234567890</p>
-                                <p class="text-stone-500 text-[10px] mt-1">a.n. Jujun Jamaludin</p>
+                                <p id="rekening-bca" class="font-mono text-xl font-bold text-cozy-emerald tracking-widest">1234567890</p>
+                                <p class="text-stone-500 text-xs mt-1">a.n. Jujun Jamaludin</p>
                             </div>
+                            <button onclick="copyToClipboard('rekening-bca')" class="w-full py-3 bg-cozy-sand hover:bg-cozy-clay hover:text-white text-cozy-dark text-xs font-bold rounded-xl transition duration-300 flex items-center justify-center gap-2 border border-cozy-clay/20">
+                                <i class="fa-regular fa-copy"></i> Salin No. Rekening
+                            </button>
                         </div>
-                        <button onclick="copyToClipboard('rekening-bca')" class="w-full py-2.5 bg-cozy-sand hover:bg-cozy-clay hover:text-white text-cozy-dark text-xs font-bold rounded-xl transition duration-300 flex items-center justify-center gap-2 border border-cozy-clay/20">
-                            <i class="fa-regular fa-copy"></i> Salin Nomor Rekening
-                        </button>
-                    </div>
 
-                    <!-- Bride Account (Mandiri) -->
-                    <div class="bg-white border border-cozy-sage/20 rounded-3xl p-6 shadow-sm flex flex-col justify-between items-center relative overflow-hidden">
-                        <div class="absolute -right-6 -bottom-6 w-16 h-16 bg-cozy-sage/5 rounded-full"></div>
-                        <div class="text-left w-full">
-                            <p class="text-[9px] font-mono text-stone-400 uppercase tracking-widest font-bold mb-1">Rekening Mempelai Wanita</p>
+                        <!-- Bride Mandiri Account -->
+                        <div class="card-3d bg-white border border-stone-200 rounded-3xl p-6 shadow-sm relative overflow-hidden text-left">
+                            <p class="text-[9px] font-mono text-stone-400 uppercase font-bold mb-1">Rekening Mempelai Wanita</p>
                             <span class="px-3 py-1 bg-cozy-sand text-cozy-sage border border-cozy-sage/20 font-mono font-bold rounded-full text-[10px]">BANK MANDIRI</span>
                             
                             <div class="my-6">
                                 <p class="text-stone-400 text-[10px] mb-1">Nomor Rekening</p>
-                                <p id="rekening-mandiri" class="font-mono text-lg md:text-xl font-bold text-cozy-emerald tracking-widest">9876543210</p>
-                                <p class="text-stone-500 text-[10px] mt-1">a.n. Silvi Sri Nuraini</p>
+                                <p id="rekening-mandiri" class="font-mono text-xl font-bold text-cozy-emerald tracking-widest">9876543210</p>
+                                <p class="text-stone-500 text-xs mt-1">a.n. Silvi Sri Nuraini</p>
                             </div>
+                            <button onclick="copyToClipboard('rekening-mandiri')" class="w-full py-3 bg-cozy-sand hover:bg-cozy-sage hover:text-white text-cozy-dark text-xs font-bold rounded-xl transition duration-300 flex items-center justify-center gap-2 border border-cozy-sage/20">
+                                <i class="fa-regular fa-copy"></i> Salin No. Rekening
+                            </button>
                         </div>
-                        <button onclick="copyToClipboard('rekening-mandiri')" class="w-full py-2.5 bg-cozy-sand hover:bg-cozy-sage hover:text-white text-cozy-dark text-xs font-bold rounded-xl transition duration-300 flex items-center justify-center gap-2 border border-cozy-sage/20">
-                            <i class="fa-regular fa-copy"></i> Salin Nomor Rekening
-                        </button>
+                    </div>
+
+                    <!-- Copy success notification toast -->
+                    <div id="toast-notif" class="fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-cozy-dark text-white text-xs py-2.5 px-6 rounded-full opacity-0 pointer-events-none transition duration-300 z-50 flex items-center gap-2 shadow-xl">
+                        <i class="fa-solid fa-circle-check text-green-400"></i> No. Rekening Berhasil Disalin!
                     </div>
                 </div>
+            </div>
 
-                <!-- Toast Notif -->
-                <div id="toast-notif" class="fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-cozy-dark text-white text-xs py-2.5 px-6 rounded-full opacity-0 pointer-events-none transition duration-300 z-50 flex items-center gap-2 shadow-xl">
-                    <i class="fa-solid fa-circle-check text-green-400"></i> No. Rekening Berhasil Disalin!
+            <!-- NOTEBOOK BACK COVER / FOOTER -->
+            <footer class="py-16 bg-cozy-dark text-cozy-sand text-center relative overflow-hidden">
+                <div class="max-w-xl mx-auto px-6">
+                    <!-- Fixed Arabic text containing typos: 'وَالسَّلَAMُ' corrected to 'وَالسَّلَامُ' -->
+                    <div class="font-arabic text-2xl text-cozy-clay mb-4 opacity-90">وَالسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ</div>
+                    <p class="text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-2">Jazaakumullaahu Khairan Katsiran</p>
+                    <p class="text-xs text-stone-400 leading-relaxed mb-8">
+                        Merupakan suatu kehormatan dan kebahagiaan yang berlipat ganda bagi kami sekeluarga besar, apabila Bapak/Ibu/Saudara/i sekalian berkenan melangkahkan kaki untuk memberikan doa restu yang tulus kepada kami.
+                    </p>
+                    
+                    <h3 class="font-serif text-3xl font-bold text-cozy-sand mb-2">Jujun & Silvi</h3>
+                    <p class="font-handwritten text-2xl text-cozy-clay mb-6">See you on our special day! 🎒✨</p>
+                    
+                    <p class="text-[9px] text-stone-500 font-mono">&copy; 2026 Jujun & Silvi Wedding Invitation. Designed with 3D Notebook Vibe.</p>
                 </div>
-            </div>
-        </section>
+            </footer>
 
-        <!-- FOOTER (Syar'i & Nostalgic Ending) -->
-        <footer class="py-16 bg-cozy-dark text-cozy-sand text-center relative overflow-hidden">
-            <div class="relative z-10 max-w-xl mx-auto px-4">
-                <div class="font-arabic text-2xl text-cozy-clay mb-4 opacity-90">وَالسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ</div>
-                <p class="text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-2">Jazaakumullaahu Khairan Katsiran</p>
-                <p class="text-xs text-stone-400 leading-relaxed mb-8">
-                    Merupakan suatu kehormatan dan kebahagiaan yang berlipat ganda bagi kami sekeluarga besar, apabila Bapak/Ibu/Saudara/i sekalian berkenan melangkahkan kaki untuk memberikan doa restu yang tulus kepada kami.
-                </p>
-                
-                <h3 class="font-serif text-3xl font-bold text-cozy-sand mb-2">Jujun & Silvi</h3>
-                <p class="font-handwritten text-xl text-cozy-clay mb-6">See you on our special day! 🎒✨</p>
-                
-                <p class="text-[10px] text-stone-500 font-mono">&copy; 2026 Jujun & Silvi Wedding Invitation. High School & Syar'i Cozy Theme.</p>
-            </div>
-        </footer>
+        </div>
     </div>
 
     <script>
-        // Read URL Parameters (eg: ?to=Nama%20Tamu)
+        // --- THREE.JS INTERACTIVE 3D BACKGROUND ---
+        let scene, camera, renderer, objects = [];
+        let mouseX = 0, mouseY = 0;
+        let windowHalfX = window.innerWidth / 2;
+        let windowHalfY = window.innerHeight / 2;
+
+        function init3D() {
+            const canvas = document.getElementById('canvas3d');
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0xf5efeb, 0.015);
+
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+            camera.position.z = 20;
+
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+            scene.add(ambientLight);
+
+            const dirLight = new THREE.DirectionalLight(0xfff0e0, 0.8);
+            dirLight.position.set(10, 20, 10);
+            scene.add(dirLight);
+
+            // Create 3D Paper Plane Geometry (Handmade pure vertex map)
+            const planeGeom = new THREE.BufferGeometry();
+            const vertices = new Float32Array([
+                0, 0, 1.5,       // Nose
+                -0.6, 0, -0.6,   // Left wing tip
+                0, 0.25, -0.6,   // Center fold top
+                
+                0, 0, 1.5,       // Nose
+                0, 0.25, -0.6,   // Center fold top
+                0.6, 0, -0.6,    // Right wing tip
+
+                0, 0.25, -0.6,   // Center fold top
+                -0.6, 0, -0.6,   // Left wing tip
+                0, -0.15, -0.6,  // Keel bottom
+
+                0, 0.25, -0.6,   // Center fold top
+                0, -0.15, -0.6,  // Keel bottom
+                0.6, 0, -0.6     // Right wing tip
+            ]);
+            planeGeom.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+            planeGeom.computeVertexNormals();
+
+            // Materials
+            const paperMaterial = new THREE.MeshPhongMaterial({
+                color: 0xfaf6f0,
+                side: THREE.DoubleSide,
+                flatShading: true,
+                shininess: 10
+            });
+
+            const sageMaterial = new THREE.MeshPhongMaterial({
+                color: 0x798e75,
+                side: THREE.DoubleSide,
+                flatShading: true,
+                shininess: 10
+            });
+
+            // Spawn 3D Flying Elements
+            for (let i = 0; i < 25; i++) {
+                const mesh = new THREE.Mesh(planeGeom, i % 2 === 0 ? paperMaterial : sageMaterial);
+                mesh.position.set(
+                    (Math.random() - 0.5) * 40,
+                    (Math.random() - 0.5) * 40,
+                    (Math.random() - 0.5) * 30 - 10
+                );
+                mesh.rotation.set(
+                    Math.random() * Math.PI,
+                    Math.random() * Math.PI,
+                    0
+                );
+                // Assign custom physics properties for animating
+                mesh.userData = {
+                    speedX: (Math.random() - 0.5) * 0.05,
+                    speedY: (Math.random() - 0.5) * 0.04 - 0.02, // Generally drifting downwards
+                    speedZ: (Math.random() - 0.5) * 0.03,
+                    rotSpeedX: Math.random() * 0.01,
+                    rotSpeedY: Math.random() * 0.01
+                };
+                scene.add(mesh);
+                objects.push(mesh);
+            }
+
+            document.addEventListener('mousemove', onDocumentMouseMove);
+            window.addEventListener('resize', onWindowResize);
+            animate();
+        }
+
+        function onDocumentMouseMove(event) {
+            mouseX = (event.clientX - windowHalfX) * 0.05;
+            mouseY = (event.clientY - windowHalfY) * 0.05;
+        }
+
+        function onWindowResize() {
+            windowHalfX = window.innerWidth / 2;
+            windowHalfY = window.innerHeight / 2;
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // --- STREAMING_CHUNK:Animating 3D Objects... ---
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Gentle camera movement based on mouse input
+            camera.position.x += (mouseX - camera.position.x) * 0.03;
+            camera.position.y += (-mouseY - camera.position.y) * 0.03;
+            camera.lookAt(scene.position);
+
+            // Animating floating paper planes
+            objects.forEach(obj => {
+                obj.position.x += obj.userData.speedX;
+                obj.position.y += obj.userData.speedY;
+                obj.position.z += obj.userData.speedZ;
+
+                obj.rotation.x += obj.userData.rotSpeedX;
+                obj.rotation.y += obj.userData.rotSpeedY;
+
+                // Loop positions back into boundary frustum
+                if (obj.position.y < -20) obj.position.y = 20;
+                if (obj.position.x < -25) obj.position.x = 25;
+                if (obj.position.x > 25) obj.position.x = -25;
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        // --- GENERAL LOGIC ---
         window.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const guest = params.get('to');
             if (guest) {
                 document.getElementById('guest-name').innerText = decodeURIComponent(guest);
             } else {
-                document.getElementById('guest-name').innerText = "Keluarga & Teman Mulia Almamater";
+                document.getElementById('guest-name').innerText = "Sahabat Almamater Terbaik";
             }
             loadWishes();
+            init3D();
         });
 
-        // Open Invitation
+        // Open Invitation Envelope
         function openInvitation() {
             const cover = document.getElementById('welcome-cover');
             const main = document.getElementById('main-content');
             
             cover.classList.add('opacity-0', 'pointer-events-none');
             main.classList.remove('hidden');
-            document.body.style.overflow = 'auto'; // allow scroll
+            document.body.style.overflow = 'auto'; // allow scrolling
 
             setTimeout(() => {
                 cover.style.display = 'none';
             }, 1000);
 
-            // Trigger beautiful romantic Lo-Fi synth loop
+            // Initiate lovely nostalgic synthesizer melody
             startLoFiMusic();
         }
 
         // Countdown Timer: Dec 5, 2026
         const weddingDate = new Date("Dec 5, 2026 08:00:00").getTime();
-
         const timerInterval = setInterval(() => {
             const now = new Date().getTime();
             const distance = weddingDate - now;
@@ -752,15 +909,16 @@
             }, 2500);
         }
 
+        // --- STREAMING_CHUNK:Loading Guest Wishes Data... ---
         // Guestbook / LocalStorage RSVP
         const defaultWishes = [
-            { name: "Ust. Ahmad Farhan (Guru Ngaji)", status: "Hadir", message: "Barakallahu laka wa baaraka 'alaika wa jama'a bainakuma fii khair. Saya bersaksi atas keindahan ikhtiar kalian berdua. Masya Allah, perjuangan ananda Jujun menjaga kehormatan diri dalam jarak Depok-Cilacap hingga saat khitbah di Maret 2026 kemarin adalah keteladanan nyata. Semoga samawa!" },
-            { name: "Rian Aditya (Teman Sekelas)", status: "Hadir", message: "Gokil bgt bro Jujun & Silvi! Masih ketawa sendiri kalau inget reuni kelas April 2024 kemarin, panitia pada berhalangan, malah takdir Allah mempertemukan kalian berdua yang cuma dateng bawa ponakan dan ditemenin bapak. Terharu denger kisah penantian kalian. Selamat menempuh ibadah terindah!" },
-            { name: "Bu Indah (Wali Kelas XII)", status: "Hadir", message: "Masya Allah, anak didik Ibu yang pintar dan sholeh-sholehah. Ibu ingat betul dulu di kelas 11 & 12 kalian berdua sangat pemalu dan hampir tidak pernah satu kelompok belajar. Sungguh rahasia Allah sangat indah menyatukan kalian di waktu yang tepat. Selamat menempuh hidup baru ya!" }
+            { name: "Ahmad Farhan (Guru Ngaji)", status: "Hadir", message: "Barakallahu laka wa baaraka 'alaika wa jama'a bainakuma fii khair. Perjuangan Jujun menjaga iffah dalam jarak jauh Depok-Cilacap, hingga akhirnya mantap melamar didampingi bapak & guru ngaji adalah teladan syar'i yang luar biasa. Bahagia selalu!" },
+            { name: "Rian Aditya (Teman Sekelas)", status: "Hadir", message: "Hahaha inget banget pas reuni April 2024 kemarin! Kita berhalangan hadir, taunya cuma Jujun yang bawa ponakan sama Silvi dianter bapaknya yang nongkrong berdua. Ternyata itu jalan takdir kalian. Samawa bro!" },
+            { name: "Bu Indah (Wali Kelas XII)", status: "Hadir", message: "Masya Allah, selamat untuk Jujun dan Silvi! Ibu ingat betul dulu sewaktu kelas 11 dan 12 kalian berdua sangat pemalu, bahkan tidak pernah satu kelompok belajar. Sungguh rahasia takdir Allah yang sangat manis." }
         ];
 
         function getStoredWishes() {
-            const stored = localStorage.getItem('wedding_wishes_genz');
+            const stored = localStorage.getItem('wedding_wishes_3dsma');
             return stored ? JSON.parse(stored) : defaultWishes;
         }
 
@@ -773,21 +931,17 @@
             container.innerHTML = '';
 
             wishes.slice().reverse().forEach((wish, idx) => {
-                // Color codes for warm aesthetic sticky paper slips
-                const bgColors = [
-                    'bg-[#FAF4EB] border-cozy-clay/20 rotate-[-1deg]',
-                    'bg-[#F2ECE4] border-cozy-sage/20 rotate-[1deg]',
-                    'bg-[#FFFDF9] border-[#D38E70]/10 rotate-[-0.5deg]'
-                ];
-                const selectedBg = bgColors[idx % bgColors.length];
+                // Alternating paper rotation for handmade bulletin board look
+                const rotations = ['rotate-[-1deg]', 'rotate-[1deg]', 'rotate-[-0.5deg]', 'rotate-[0.5deg]'];
+                const selectRot = rotations[idx % rotations.length];
                 const badgeColor = wish.status === "Hadir" ? 'bg-green-100 text-green-800' : 'bg-stone-100 text-stone-600';
 
                 const div = document.createElement('div');
-                div.className = `${selectedBg} p-5 rounded-2xl border shadow-sm relative overflow-hidden transition hover:scale-[1.01] duration-300`;
+                div.className = `bg-white p-4 rounded-xl border border-stone-200 shadow-sm relative overflow-hidden transition hover:scale-[1.01] duration-300 ${selectRot}`;
                 div.innerHTML = `
                     <div class="flex items-center justify-between mb-2">
                         <h4 class="font-serif font-bold text-cozy-emerald text-xs">${escapeHTML(wish.name)}</h4>
-                        <span class="text-[9px] font-mono font-bold px-2.5 py-0.5 rounded-full ${badgeColor}">${wish.status}</span>
+                        <span class="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full ${badgeColor}">${wish.status}</span>
                     </div>
                     <p class="text-xs text-stone-600 italic font-sans leading-relaxed">"${escapeHTML(wish.message)}"</p>
                 `;
@@ -805,7 +959,7 @@
 
             const wishes = getStoredWishes();
             wishes.push({ name, status, message });
-            localStorage.setItem('wedding_wishes_genz', JSON.stringify(wishes));
+            localStorage.setItem('wedding_wishes_3dsma', JSON.stringify(wishes));
 
             document.getElementById('rsvp-form').reset();
             loadWishes();
@@ -817,7 +971,8 @@
             );
         }
 
-        // Web Audio API: Cozy Lo-Fi Aesthetic Wedding Chills
+        // --- STREAMING_CHUNK:Synthesizing Lo-Fi Cozy Music... ---
+        // Web Audio API: Cozy High School Lofi Melodic Chills
         let audioCtx = null;
         let isPlaying = false;
         let melodyTimer = null;
@@ -829,7 +984,6 @@
             audioCtx = new AudioContext();
             isPlaying = true;
 
-            // Warm pentatonic progression mimicking cute high school memories & Islamic peace
             // F Major (F, A, C, G) -> D Minor (D, F, A, E) -> Bb Major (Bb, D, F, C) -> C Major (C, E, G, D)
             const chords = [
                 [174.61, 220.00, 261.63, 392.00], // F3, A3, C4, G4 (Fadd9)
@@ -845,11 +999,11 @@
                 
                 const now = audioCtx.currentTime;
 
-                // Create a low-pass filter to give that warm lo-fi tape saturation feel
+                // Low-pass filter for cozy bedroom lofi keyboard warmth
                 const filter = audioCtx.createBiquadFilter();
                 filter.type = 'lowpass';
-                filter.frequency.setValueAtTime(350, now);
-                filter.frequency.exponentialRampToValueAtTime(150, now + 4.5);
+                filter.frequency.setValueAtTime(450, now);
+                filter.frequency.exponentialRampToValueAtTime(180, now + 4.5);
                 filter.Q.value = 1.0;
                 filter.connect(audioCtx.destination);
 
@@ -857,14 +1011,11 @@
                     const osc = audioCtx.createOscillator();
                     const gainNode = audioCtx.createGain();
 
-                    // Sine wave for ultra-soft warm lo-fi keyboard tones
-                    osc.type = 'sine';
+                    osc.type = 'sine'; // Super warm and clean sine tone
                     
-                    // Stagger notes arpeggio style slightly
                     const playDelay = (idx * 0.15) + (Math.random() * 0.05);
                     osc.frequency.setValueAtTime(freq, now + playDelay);
 
-                    // Volume Envelope
                     gainNode.gain.setValueAtTime(0, now);
                     gainNode.gain.linearRampToValueAtTime(0.04, now + playDelay + 0.1);
                     gainNode.gain.exponentialRampToValueAtTime(0.0001, now + playDelay + 4.0);
@@ -876,12 +1027,12 @@
                     osc.stop(now + 4.5);
                 });
 
-                // Generate a soft cozy "Lo-Fi vinyl crackle" using noise
+                // Soft background vinyl record crackles
                 playVinylCrackle(now);
             }
 
             function playVinylCrackle(now) {
-                const bufferSize = audioCtx.sampleRate * 0.5; // half second of noise
+                const bufferSize = audioCtx.sampleRate * 0.5;
                 const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
                 const data = buffer.getChannelData(0);
                 
@@ -895,22 +1046,20 @@
 
                 const noiseFilter = audioCtx.createBiquadFilter();
                 noiseFilter.type = 'bandpass';
-                noiseFilter.frequency.setValueAtTime(1200, now);
-                noiseFilter.Q.value = 3.0;
+                noiseFilter.frequency.setValueAtTime(1000, now);
+                noiseFilter.Q.value = 4.0;
 
                 const noiseGain = audioCtx.createGain();
-                noiseGain.gain.setValueAtTime(0.005, now); // ultra quiet crackle
+                noiseGain.gain.setValueAtTime(0.003, now); // Quiet texture
 
                 noise.connect(noiseFilter);
                 noiseFilter.connect(noiseGain);
                 noiseGain.connect(audioCtx.destination);
 
                 noise.start(now);
-                // Stop noise buffer dynamically to keep clean resources
                 noise.stop(now + 4.5);
             }
 
-            // Loop the song
             playCozyChord(chords[chordIndex]);
             chordIndex = (chordIndex + 1) % chords.length;
 
@@ -927,7 +1076,7 @@
             if (isPlaying) {
                 isPlaying = false;
                 if (audioCtx) audioCtx.suspend();
-                icon.className = "fa-solid fa-compact-disc text-stone-400";
+                icon.className = "fa-solid fa-compact-disc text-stone-400 text-lg";
             } else {
                 isPlaying = true;
                 if (audioCtx) {
@@ -935,26 +1084,9 @@
                 } else {
                     startLoFiMusic();
                 }
-                icon.className = "fa-solid fa-compact-disc animate-spin";
+                icon.className = "fa-solid fa-compact-disc animate-spin text-lg";
             }
         }
     </script>
 </body>
 </html>
-```
-eof
-
-### Apa Saja yang Diperbarui dalam Edisi "Gen Z & High School Syar'i" Ini?
-
-1. **Ilustrasi Storybook Hangat (Sesuai Gambar Referensi Anda)**:
-   * Saya telah menyertakan gambar `watermarked_img_9091036554872741594.png` yang merepresentasikan kisah manis pertemuan kembali Anda berdua di Stasiun Malang. Gambar ini tampil di bagian penutup cover pembuka dan bagian *Love Story*.
-   * Menggunakan konsep **Polaroid Retro** yang miring manis, dikombinasikan dengan selotip kertas (*washi tape*) dan tulisan bergaya tulisan tangan yang menggemaskan.
-
-2. **Gaya Bahasa & Estetika Gen Z**:
-   * Menambahkan detail kecil seperti **kartu profil unik ala murid sekolah** (terdiri dari tipe kepribadian MBTI, nama kelas SMA, dan kegemaran/hobi) untuk memperkenalkan Anda dan Silvi secara asyik namun tetap santun.
-   * Tagline bertema sekolah yang romantis: *"From High School Bench to Altar of Ibadah ✨"* (Teman Sebangku Jadi Teman Hidup).
-
-3. **Musik Lo-Fi Islami yang Syahdu**:
-   * Musik latar yang dibuat secara sintetis oleh browser kini bertema lo-fi yang tenang, dipadu efek suara kemercik piringan hitam (*vinyl crackle*) yang menciptakan suasana romantis retro seakan mengenang bangku sekolah.
-
-Undangan digital ini kini siap dikirimkan kepada teman-teman angkatan SMA maupun sanak keluarga tercinta Anda! Silakan klik tombol **Preview** untuk melihat betapa manis dan tenangnya tampilan undangan baru Anda ini.
